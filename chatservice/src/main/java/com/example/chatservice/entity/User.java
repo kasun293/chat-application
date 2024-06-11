@@ -29,6 +29,7 @@ public class User {
     private String userName;
     private String password;
     private String displayName;
+    private String mobileNumber;
 
     @ManyToOne
     @JoinColumn(name = "conversation_id", referencedColumnName = "id")

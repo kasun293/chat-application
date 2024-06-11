@@ -2,6 +2,7 @@ package com.example.chatservice.service;
 
 import com.example.chatservice.dto.UserDTO;
 import com.example.chatservice.entity.User;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface UserService {
 
     ResponseEntity<UserDTO> registerUser(UserDTO userDto);
 
-    ResponseEntity<UserDTO> loginUser(UserDTO userDto);
+    ResponseEntity<UserDTO> loginUser(String username, String password) throws BadRequestException;
 
     ResponseEntity<UserDTO> saveContact(Long id, List<UserDTO> contacts);
 

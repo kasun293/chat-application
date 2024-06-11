@@ -4,14 +4,15 @@ import com.example.chatservice.dto.UserDTO;
 import com.example.chatservice.entity.User;
 import com.example.chatservice.repository.UserRepository;
 import com.example.chatservice.service.UserService;
+import com.example.chatservice.util.MapperUtil;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,10 +29,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<UserDTO> registerUser(UserDTO userDto) {
-        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         ModelMapper mapper = new ModelMapper();
         User user = mapper.map(userDto, User.class);
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+//        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(user);
         return ResponseEntity.ok(UserDTO.builder()
                         .id(user.getId())
@@ -42,8 +43,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<UserDTO> loginUser(UserDTO userDto) {
-        return null;
+    public ResponseEntity<UserDTO> loginUser(String username, String password) throws BadRequestException {
+        User user = userRepository.findByUserNameAndPassword(username, password);
+        if (user == null) {
+            throw new BadRequestException("Invalid username or password");
+        }
+        UserDTO userDTO = MapperUtil.map(user, UserDTO.class);
+        return ResponseEntity.ok(userDTO);
     }
 
     @Override
