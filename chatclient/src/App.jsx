@@ -1,10 +1,11 @@
 import "./App.css";
-import SignUp from "./communication/SignUp";
+import { router } from "./routes/router";
+import { RouterProvider } from "react-router-dom";
 
 function App() {
   return (
     <>
-      <SignUp />
+      <RouterProvider router={router} />
     </>
   );
 }

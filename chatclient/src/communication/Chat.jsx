@@ -1,6 +1,12 @@
-import { Snackbar } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Divider, Grid, Snackbar } from "@mui/material";
 import { DEF_ACTIONS } from "../constants/permissions";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import SingleConversation from "./SingleConversation";
+import { createGroupConversation, deleteConversation, getConversationList, getUserProfile, updateGroupConversation } from "../action/action";
+import { Add, Delete, Edit, Vrpano } from "@mui/icons-material";
+import ChatPage from "./ChatPage";
+import CreateGroupDialog from "./CreateGroupDialog";
+import DialogBox from "../components/DialogBox";
 
 
 const Chat = () => {
@@ -11,7 +17,7 @@ const Chat = () => {
   const [formData, setformData] = useState({});
   const [loading, setLoading] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const containerRef = useRef(null);
+  // const containerRef = useRef(null);
   const [ action, setAction ] = useState(DEF_ACTIONS.ADD);
 
   console.log({ formData });
@@ -72,9 +78,9 @@ const Chat = () => {
     setLoading(true);
     try {
       if (formData?.id) {
-        await updateGroup(formData, onSuccess, onError);
+        await updateGroupConversation(formData, onSuccess, onError);
       } else {
-        await createGroup(formData, onSuccess, onError);
+        await createGroupConversation(formData, onSuccess, onError);
       }
     } catch (error) {
       console.log(error);
@@ -104,7 +110,7 @@ const Chat = () => {
   const confirmDelete = async () => {
     setformData(conversation);
     setLoading(true);
-    await deleteMessageGroup(formData, onSuccess, onError);
+    await deleteConversation(formData, onSuccess, onError);
     setConversation(null);
     setOpenDelete(false);
     setLoading(false);
@@ -122,7 +128,7 @@ const Chat = () => {
   };
 
   const fetchGroupList = () => {
-    getMessageGroupList().then(({ dataList = [] }) => {
+    getConversationList().then(({ dataList = [] }) => {
       console.log({ dataList });
       setGroupList(dataList);
     });
@@ -214,7 +220,7 @@ const Chat = () => {
           open={openDelete}
           title={`Delete Group`}
           actions={
-            <ActionWrapper>
+            <div>
               <Button
                 variant="contained"
                 color="info"
@@ -231,11 +237,11 @@ const Chat = () => {
               >
                 Close
               </Button>
-            </ActionWrapper>
+            </div>
           }
         >
           <>
-            <DeleteMsg />
+            {/* <DeleteMsg /> */}
             <Divider sx={{ mt: "16px" }} />
             {renderSelectedItems()}
           </>

@@ -1,70 +1,95 @@
-import { Button, Grid, TextField } from "@mui/material";
+// import React from 'react'
+
+import { Grid, TextField } from "@mui/material";
 import { useState } from "react";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import IconButton from '@mui/material/IconButton';
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({})
-    console.log({formData})
-
-const handleChange = (value, target) => {
+  const handleChange = (value, target) => {
     setFormData((currentData = {}) => {
-        let newData = {...currentData}
-        newData[target] = value
-        return newData
-    })
-}
+      let newData = { ...currentData };
+      newData[target] = value;
+      return newData;
+    });
+    console.log({ formData });
+  };
+  
+  const goBack = () => {
+    navigate("/")
+  }
 
   return (
-    <>
-      <div
-        className="sign-up"
-        style={{
-          height: "50vh",
-          width: "30vw",
-          backgroundColor: "lightblue",
-          paddingTop: "1px",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Sign Up</h2>
-        <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
-          <TextField required id="outlined-required" label="User Name" size="small"
+    <div
+      className="log-in"
+      style={{
+        position: "relative",
+        height: "50vh",
+        width: "30vw",
+        backgroundColor: "lightblue",
+        paddingTop: "1px",
+        borderRadius: "10px",
+      }}
+    >
+      <IconButton 
+      onClick={goBack}
+      style={{
+        position: "absolute",
+        left: "0px"
+      }}>
+        <ArrowBackIosIcon />
+      </IconButton>
+      SignUp
+      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+        <TextField
+          required
+          id="outlined-required"
+          label="First Name"
+          size="small"
+          onChange={(e) => handleChange(e?.target?.value || "", "firstName")}
+        />
+      </Grid>
+      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+        <TextField
+          required
+          id="outlined-required"
+          label="Last Name"
+          size="small"
+          onChange={(e) => handleChange(e?.target?.value || "", "lastName")}
+        />
+      </Grid>
+      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+        <TextField
+          required
+          id="outlined-required"
+          label="User Name"
+          size="small"
           onChange={(e) => handleChange(e?.target?.value || "", "username")}
-          />
-        </Grid>
-        <Grid sx={{ margin: "10px" }}>
-          <TextField
-            id="outlined-password-input"
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            size="small"
-            onChange={(e) => handleChange(e?.target?.value || "", "password")}
-          />
-        </Grid>
-        <Grid sx={{ margin: "10px" }}>
-          <TextField
-            id="outlined-password-input2"
-            label="Confirm Password"
-            type="password"
-            autoComplete="current-password"
-            size="small"
-            onChange={((e) => handleChange(e?.target?.value || "", "confirmPassword"))}
-          />
-        </Grid>
-        <Grid>
-          <h6>
-            By signing up you agree to our Terms of Service and Privacy Policy
-          </h6>
-          <Button variant="contained">Sign Up</Button>
-        </Grid>
-        <Grid>
-          <h6>
-            Already have an account? <a href="/login">Login</a>
-          </h6>
-        </Grid>
-      </div>
-    </>
+        />
+      </Grid>
+      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+        <TextField
+          required
+          id="outlined-required"
+          label="Display Name"
+          size="small"
+          onChange={(e) => handleChange(e?.target?.value || "", "displayName")}
+        />
+      </Grid>
+      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+        <TextField
+          required
+          id="outlined-required"
+          label="Mobile Nuumber"
+          size="small"
+          onChange={(e) => handleChange(e?.target?.value || "", "mobileNumber")}
+        />
+      </Grid>
+    </div>
   );
 };
 

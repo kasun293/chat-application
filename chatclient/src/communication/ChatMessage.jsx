@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+import { Avatar, Box } from "@mui/material";
+import { stringAvatar } from "../constants/stringUtils";
 
 
 const ChatMessage = ({ message, user }) => {

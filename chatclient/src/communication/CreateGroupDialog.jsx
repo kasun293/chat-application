@@ -1,4 +1,22 @@
-
+/* eslint-disable react/prop-types */
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  MenuItem,
+  Select,
+  TextField,
+  colors,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { DEF_ACTIONS } from "../constants/permissions";
+import { FieldName } from "../components/FieldName";
+import { Fonts } from "../constants/Fonts";
+import { Colors } from "../constants/Colors";
 
 const CreateGroupDialog = ({
   open,
@@ -13,22 +31,26 @@ const CreateGroupDialog = ({
   const [cropOptions, setCropOptions] = useState([]);
   const [gnOptions, setGnOptions] = useState([]);
 
+  console.log(options);
+  console.log(cropOptions);
+  console.log(gnOptions);
+
   useEffect(() => {
-    getAllAiAndMahaweliUnits().then(({ dataList = [] }) => {
-      setOptions(dataList);
-    });
-    get_CropList().then(({ dataList = [] }) => {
-      let newDtaList = dataList.map((item) => {
-        return { value: item.id, name: item.description };
-      });
-      setCropOptions(newDtaList);
-    });
-    get_GnDivisionListWithoutPage().then(({ dataList = [] }) => {
-      let newGnOptions = dataList.map((item) => {
-        return { value: item.id, name: item.name };
-      });
-      setGnOptions(newGnOptions);
-    });
+    // getAllAiAndMahaweliUnits().then(({ dataList = [] }) => {
+    setOptions();
+    // });
+    // get_CropList().then(({ dataList = [] }) => {
+    //   let newDtaList = dataList.map((item) => {
+    //     return { value: item.id, name: item.description };
+    //   });
+    setCropOptions();
+    // });
+    // get_GnDivisionListWithoutPage().then(({ dataList = [] }) => {
+    //   let newGnOptions = dataList.map((item) => {
+    //     return { value: item.id, name: item.name };
+    //   });
+    setGnOptions();
+    // });
   }, []);
 
   return (
@@ -58,17 +80,17 @@ const CreateGroupDialog = ({
             }}
           >
             <Grid item sm={12} md={12} lg={12}>
-              <FieldWrapper>
+              <div>
                 <FieldName
                   style={{
                     width: "100%",
                   }}
                 >
-                  Group Id
+                  Group Name
                 </FieldName>
                 <TextField
-                  name="groupId"
-                  id="groupId"
+                  name="groupName"
+                  id="groupName"
                   value={formData?.groupId || ""}
                   disabled={action === DEF_ACTIONS.VIEW}
                   onChange={(e) =>
@@ -83,10 +105,10 @@ const CreateGroupDialog = ({
                     },
                   }}
                 />
-              </FieldWrapper>
+              </div>
             </Grid>
             <Grid item sm={12} md={12} lg={12}>
-              <FieldWrapper>
+              <div>
                 <FieldName
                   style={{
                     width: "100%",
@@ -107,77 +129,12 @@ const CreateGroupDialog = ({
                   sx={{
                     "& .MuiInputBase-root": {
                       borderRadius: "8px",
-                      backgroundColor: `${Colors.white}`,
+                      backgroundColor: `${colors.white}`,
                     },
                   }}
                 />
-              </FieldWrapper>
-              <FieldWrapper 
-                className="autocomplete">
-                <FieldName>AI Region/ Mahaweli Block</FieldName>
-                <Autocomplete
-                  // multiple
-                  options={options}
-                  disabled={action === DEF_ACTIONS.VIEW}
-                  value={
-                    options[0]?.parentType === "MAHAWELI"
-                      ? formData?.mahaweliBlockDto
-                      : formData?.aiRegionIdDto
-                  }
-                  getOptionLabel={(i) =>
-                    formData?.id
-                      ? ` ${i?.description}`
-                      : `${i?.code} - ${i?.description}`
-                  }
-                  onChange={(event, value) => {
-                    handleChange(
-                      value,
-                      options[0]?.parentType === "MAHAWELI"
-                        ? "mahaweliBlockDto"
-                        : "aiRegionIdDto"
-                    );
-                  }}
-                  disableClearable
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "8px",
-                    },
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} size="small" />
-                  )}
-                  fullWidth
-                />
-              </FieldWrapper>
-              <FieldWrapper>
-                <FieldName>Is Default</FieldName>
-                <Switch
-                  name="isDefault"
-                  id="isDefault"
-                  value={formData?.isDefault || ""}
-                  disabled={action === DEF_ACTIONS.VIEW}
-                  onChange={(e) =>
-                    handleChange(e?.target?.checked || "", "isDefault")
-                  }
-                  checked={formData?.isDefault}
-                  aria-label="Switch demo"
-                />
-              </FieldWrapper>
-              <FieldWrapper>
-                <FieldName>Is Custom</FieldName>
-                <Switch
-                  name="isCustom"
-                  id="isCustom"
-                  value={formData?.isCustom || ""}
-                  disabled={action === DEF_ACTIONS.VIEW}
-                  onChange={(e) =>
-                    handleChange(e?.target?.checked || "", "isCustom")
-                  }
-                  checked={formData?.isCustom}
-                  aria-label="Switch demo"
-                />
-              </FieldWrapper>
-              <FieldWrapper>
+              </div>
+              <div>
                 <FieldName>Filter Type</FieldName>
                 <Select
                   name="filterType"
@@ -196,67 +153,7 @@ const CreateGroupDialog = ({
                   <MenuItem value={"CROP"}>Crop</MenuItem>
                   <MenuItem value={"GN"}>Gn</MenuItem>
                 </Select>
-              </FieldWrapper>
-              <FieldWrapper>
-                <FieldName>Crop</FieldName>
-                <Autocomplete
-                  multiple
-                  disabled={
-                    formData?.filterType !== "CROP" ||
-                    formData?.filterType === null || action === DEF_ACTIONS.VIEW
-                  }
-                  options={cropOptions}
-                  value={
-                    formData?.filterType === "CROP"
-                      ? formData?.filterValueDTOS || []
-                      : []
-                  }
-                  getOptionLabel={(i) => ` ${i?.value} - ${i?.name}`}
-                  onChange={(event, value) => {
-                    handleChange(value, "filterValueDTOS");
-                  }}
-                  disableClearable
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "8px",
-                    },
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} size="small" />
-                  )}
-                  fullWidth
-                />
-              </FieldWrapper>
-              <FieldWrapper>
-                <FieldName>Gn</FieldName>
-                <Autocomplete
-                  multiple
-                  disabled={
-                    formData?.filterType !== "GN" ||
-                    formData?.filterType === null || action === DEF_ACTIONS.VIEW
-                  }
-                  options={gnOptions}
-                  value={
-                    formData?.filterType === "GN"
-                      ? formData?.filterValueDTOS || []
-                      : []
-                  }
-                  getOptionLabel={(i) => `${i?.name}`}
-                  onChange={(event, value) => {
-                    handleChange(value, "filterValueDTOS");
-                  }}
-                  disableClearable
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "8px",
-                    },
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} size="small" />
-                  )}
-                  fullWidth
-                />
-              </FieldWrapper>
+              </div>
             </Grid>
           </Grid>
         </Box>
