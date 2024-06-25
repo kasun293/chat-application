@@ -1,4 +1,5 @@
 import axios from "axios";
+// import { authAxios } from "../api/api";
 
 export const fetchUserList = async () => {
   try {
@@ -11,6 +12,23 @@ export const fetchUserList = async () => {
       };
       throw exception;
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const signUp = async (payload = {}) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/v1/users/register",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response;
   } catch (error) {
     console.log(error);
   }
@@ -50,28 +68,28 @@ export const getConversationList = async () => {
 
 export const deleteConversation = async (
   formData,
-    onSuccess = () => {},
-    onError = (_message) => {}
+  onSuccess = () => {},
+  onError = (_message) => {}
 ) => {
   try {
-    const response = await axios.delete("url")
-    if (response){
-      console.log(response)
-    }else{
+    const response = await axios.delete("url");
+    if (response) {
+      console.log(response);
+    } else {
       const exception = {
         apiError: response.message,
       };
       throw exception;
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 export const getUserProfile = async () => {
-  try{
+  try {
     const response = await axios.get("url");
-    if(response.ok) {
+    if (response.ok) {
       return response;
     } else {
       const exception = {
@@ -79,10 +97,10 @@ export const getUserProfile = async () => {
       };
       throw exception;
     }
-  }catch (error){
-    console.log(error)
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
 export const updateGroupConversation = async (
   payload = {},
@@ -90,8 +108,8 @@ export const updateGroupConversation = async (
   onError = (_message) => {}
 ) => {
   try {
-    const response = axios.put('url')
-    if(response){
+    const response = axios.put("url");
+    if (response) {
       return response;
     } else {
       const exception = {
@@ -100,23 +118,60 @@ export const updateGroupConversation = async (
       throw exception;
     }
   } catch (error) {
-    console.log(error)
-    
+    console.log(error);
   }
-}
+};
 
 export const createGroupConversation = async () => {
   try {
-    const response = axios.post("url")
-    if (response){
+    const response = axios.post("url");
+    if (response) {
       return response;
-    }else {
+    } else {
       const exception = {
         apiError: response.message,
       };
       throw exception;
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
+
+// export const login = async () => {
+//   try {
+//     const response = await axios.post("http://localhost:8080/api/v1/users/login")
+//     console.log({login})
+//     if (response) {
+//       console.log({response})
+//       localStorage.setItem("token", response.token)
+//       return response
+
+//     }
+//   } catch (error) {
+//     console.log(error)
+
+//   }
+// }
+
+export const login = async (loginData) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/v1/users/login",
+      loginData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log({ login });
+    if (response) {
+      console.log({ response });
+      localStorage.setItem("token", response.data.accessToken); // Assuming the token is in response.data.token
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

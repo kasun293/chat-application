@@ -1,6 +1,7 @@
 import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { login } from "../action/action";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
@@ -13,6 +14,16 @@ const Login = () => {
       return newData;
     });
   };
+
+  const handleLogin = () => {
+    console.log({formData})
+    login(formData).then(
+      (response) => {
+        // localStorage.setItem("accessToken", response.accessToken)
+        console.log({response})
+      }
+    )
+  }
 
   return (
     <>
@@ -47,7 +58,7 @@ const Login = () => {
           />
         </Grid>
         <Grid>
-          <Button variant="contained">LogIn</Button>
+          <Button onClick={handleLogin} variant="contained">LogIn</Button>
         </Grid>
         <Grid>
           <h6>{"Don't have an account?"}</h6>

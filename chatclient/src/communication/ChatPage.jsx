@@ -89,7 +89,7 @@ const ChatPage = ({ conversation, user }) => {
           height: "500px",
           overflow: "auto",
           width: "100%",
-          border: "3px solid green",
+          border: "1px solid pink",
           borderRadius: "20px",
           boxShadow:
             "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
@@ -126,11 +126,15 @@ const ChatPage = ({ conversation, user }) => {
         <Box marginLeft={2}>
           <Button
             variant="contained"
-            color="success"
+            // color="secondary"
             sx={{
               width: "94px",
               height: "42px",
               borderRadius: "36px",
+            backgroundColor: "#78ABA8",
+            ':hover': {
+                  backgroundColor: "#538392"
+                },
             }}
             onClick={publishMessage}
           >

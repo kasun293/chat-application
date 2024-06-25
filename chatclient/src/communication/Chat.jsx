@@ -1,13 +1,28 @@
-import { Alert, Box, Button, ButtonGroup, Divider, Grid, Snackbar } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  ButtonGroup,
+  Divider,
+  Grid,
+  Snackbar,
+} from "@mui/material";
 import { DEF_ACTIONS } from "../constants/permissions";
 import { useEffect, useState } from "react";
 import SingleConversation from "./SingleConversation";
-import { createGroupConversation, deleteConversation, getConversationList, getUserProfile, updateGroupConversation } from "../action/action";
+import {
+  createGroupConversation,
+  deleteConversation,
+  getConversationList,
+  getUserProfile,
+  updateGroupConversation,
+} from "../action/action";
 import { Add, Delete, Edit, Vrpano } from "@mui/icons-material";
 import ChatPage from "./ChatPage";
 import CreateGroupDialog from "./CreateGroupDialog";
 import DialogBox from "../components/DialogBox";
-
+import FloatingActionButtons from "../components/FloatingActionButtons";
+import AddContactDialog from "./AddContactDialog";
 
 const Chat = () => {
   const [conversation, setConversation] = useState(null);
@@ -17,8 +32,11 @@ const Chat = () => {
   const [formData, setformData] = useState({});
   const [loading, setLoading] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [ contactOpen, setContactOpen ] = useState(false);
+
+  console.log({contactOpen})
   // const containerRef = useRef(null);
-  const [ action, setAction ] = useState(DEF_ACTIONS.ADD);
+  const [action, setAction] = useState(DEF_ACTIONS.ADD);
 
   console.log({ formData });
 
@@ -70,6 +88,10 @@ const Chat = () => {
       return newData;
     });
   };
+
+  const handleContactOpen  = () => {
+    setContactOpen(true);
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -136,61 +158,113 @@ const Chat = () => {
   const onSuccess = () => {
     <Snackbar>
       <Alert severity="success">Success</Alert>
-    </Snackbar>
+    </Snackbar>;
   };
 
   const onError = (message) => {
     <Snackbar>
       <Alert severity="success">Success</Alert>
-    </Snackbar>
+    </Snackbar>;
   };
   const renderSelectedItems = () => {
     return <p>{conversation?.groupId}</p>;
   };
 
   return (
-    <div>
-      <h4>Chat Functionality - Beta</h4>
+    <div
+      style={{
+        width: "1000px",
+      }}
+    >
+      {/* <h4>Chat Functionality - Beta</h4> */}
       <Grid container justifyContent="center">
         <Grid className="button-group" item xs={3} md={3} lg={3}>
           <Box
             sx={{
               height: "100%",
               overflow: "auto",
-
-              border: "3px solid green",
+              position: "relative",
+              border: "1px solid pink",
               borderRadius: "20px",
+              boxShadow:
+                "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
             }}
           >
+            <Button
+              fullWidth
+              sx={{
+                ":hover": {
+                  backgroundColor: "#538392",
+                },
+                backgroundColor: "#78ABA8",
+              }}
+              onClick={handleOpen}
+              title="add"
+            >
+              <Add />
+              {DEF_ACTIONS.ADD}
+            </Button>
             <ButtonGroup
               variant="contained"
               disableElevation
               size="small"
               aria-label="action button group"
-              color="success"
               fullWidth
+              sx={{
+                ":hover": {
+                  backgroundColor: "#538392",
+                },
+                backgroundColor: "#78ABA8",
+              }}
             >
-                <Button onClick={handleOpen} title="add">
-                  <Add />
-                  {DEF_ACTIONS.ADD}
+              <Button
+                sx={{
+                  ":hover": {
+                    backgroundColor: "#538392",
+                  },
+                  backgroundColor: "#78ABA8",
+                }}
+                onClick={handleOpen}
+                title="add"
+              >
+                <Add />
+                {DEF_ACTIONS.ADD}
+              </Button>
+              {conversation !== null && (
+                <Button
+                  sx={{
+                    backgroundColor: "#78ABA8",
+                  }}
+                  onClick={onEdit}
+                  title="edit"
+                >
+                  <Edit />
+                  {DEF_ACTIONS.EDIT}
                 </Button>
-              {conversation !== null && (
-                  <Button onClick={onEdit} title="edit">
-                    <Edit />
-                    {DEF_ACTIONS.EDIT}
-                  </Button>
               )}
               {conversation !== null && (
-                  <Button onClick={onView} title="view">
-                    <Vrpano />
-                    {DEF_ACTIONS.VIEW}
-                  </Button>
+                <Button
+                  sx={{
+                    backgroundColor: "#78ABA8",
+                  }}
+                  onClick={onView}
+                  title="view"
+                >
+                  <Vrpano />
+                  {DEF_ACTIONS.VIEW}
+                </Button>
               )}
               {conversation !== null && (
-                  <Button onClick={onDelete} title="delete">
-                    <Delete />
-                    {DEF_ACTIONS.DELETE}
-                  </Button>
+                <Button
+                  sx={{
+                    backgroundColor: "#78ABA8",
+                  }}
+                  onClick={onDelete}
+                  title="delete"
+                >
+                  <Delete />
+                  {DEF_ACTIONS.DELETE}
+                </Button>
               )}
             </ButtonGroup>
             {loading === false &&
@@ -202,11 +276,24 @@ const Chat = () => {
                   isSelected={conversation?.id === group.id}
                 />
               ))}
+            <FloatingActionButtons 
+              title={"Add Contacts"}
+              onClick={handleContactOpen}
+            />
           </Box>
         </Grid>
         <Grid item xs={4} md={8} lg={8}>
           <ChatPage conversation={conversation} user={user} />
         </Grid>
+        <AddContactDialog
+        open={contactOpen}
+        handleClose
+        confirmAction
+        formData
+        mode
+        handleChange
+        action
+         />
         <CreateGroupDialog
           action={action}
           open={open}

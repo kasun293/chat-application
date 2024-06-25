@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import { DEF_ACTIONS } from "../constants/permissions";
 import { FieldName } from "../components/FieldName";
 import { Fonts } from "../constants/Fonts";
-import { Colors } from "../constants/Colors";
 
 const CreateGroupDialog = ({
   open,
@@ -60,6 +59,7 @@ const CreateGroupDialog = ({
       onClose={handleClose}
       aria-labelledby="new-group"
       aria-describedby="add a new group"
+      PaperProps={{ sx: { borderRadius: "15px", backgroundColor: "#ACE1AF" } }}
     >
       <DialogTitle
         id="new-group"
@@ -91,23 +91,21 @@ const CreateGroupDialog = ({
                 <TextField
                   name="groupName"
                   id="groupName"
-                  value={formData?.groupId || ""}
+                  value={formData?.conversationName || ""}
                   disabled={action === DEF_ACTIONS.VIEW}
                   onChange={(e) =>
-                    handleChange(e?.target?.value || "", "groupId")
+                    handleChange(e?.target?.value || "", "conversationName")
                   }
                   size="small"
                   fullWidth
                   sx={{
                     "& .MuiInputBase-root": {
                       borderRadius: "8px",
-                      backgroundColor: `${Colors.white}`,
+                      backgroundColor: `${colors.white}`,
                     },
                   }}
                 />
               </div>
-            </Grid>
-            <Grid item sm={12} md={12} lg={12}>
               <div>
                 <FieldName
                   style={{
@@ -150,8 +148,8 @@ const CreateGroupDialog = ({
                   }}
                   size="small"
                 >
-                  <MenuItem value={"CROP"}>Crop</MenuItem>
-                  <MenuItem value={"GN"}>Gn</MenuItem>
+                  <MenuItem value={"GROUP"}>Group</MenuItem>
+                  <MenuItem value={"PRIVATE"}>Private</MenuItem>
                 </Select>
               </div>
             </Grid>
