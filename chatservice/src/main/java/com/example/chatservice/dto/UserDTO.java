@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -17,11 +18,12 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String gender;
-    private LocalDate birthDate;
+//    private LocalDate birthDate;
     private String userName;
     private String password;
     private String confirmPassword;
     private String displayName;
+    private String mobileNumber;
     private ConversationDTO conversationDTO;
-    private Set<UserDTO> contactList;
+    private List<ConversationDTO> conversationDTOList;
 }

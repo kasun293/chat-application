@@ -3,7 +3,7 @@ package com.example.chatservice.enums;
 public enum ConversationType {
 
     GROUP("Group"),
-    INDIVIDUAL("Individual");
+    PRIVATE("Private");
 
     ConversationType(String label) {
     }

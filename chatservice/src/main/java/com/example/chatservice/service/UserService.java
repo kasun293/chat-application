@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<UserDTO> registerUser(UserDTO userDto);
+    ResponseEntity<UserDTO> registerUser (UserDTO userDto) throws BadRequestException;
 
     ResponseEntity<UserDTO> loginUser(String username, String password) throws BadRequestException;
 
@@ -18,4 +18,6 @@ public interface UserService {
     Boolean deleteContact(Long id);
 
     ResponseEntity<List<UserDTO>> getAllContacts(Long id);
+
+    ResponseEntity<UserDTO> getLoggedInUser() throws BadRequestException;
 }
