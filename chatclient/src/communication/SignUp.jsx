@@ -2,7 +2,6 @@
 
 import {
   Button,
-  FormControl,
   Grid,
   InputLabel,
   MenuItem,
@@ -50,121 +49,213 @@ const SignUp = () => {
     <div
       className="log-in"
       style={{
-        position: "relative",
-        height: "auto",
-        width: "30vw",
+        display: "flex",
+        height: "100vh",
         backgroundColor: "lightblue",
-        paddingTop: "1px",
-        borderRadius: "10px",
-        paddingBottom: "20px",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      <IconButton
-        onClick={goBack}
-        style={{
-          position: "absolute",
-          left: "0px",
+      <Grid
+        sx={{
+          width: "80%",
+          height: "80%",
+          display: "flex",
+          backgroundColor: "white",
+          borderRadius: "25px",
         }}
       >
-        <ArrowBackIosIcon />
-      </IconButton>
-      <h2>SignUp</h2>
-      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
-        <TextField
-          required
-          id="outlined-required"
-          label="First Name"
-          size="small"
-          onChange={(e) => handleChange(e?.target?.value || "", "firstName")}
-        />
-      </Grid>
-      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
-        <TextField
-          required
-          id="outlined-required"
-          label="Last Name"
-          size="small"
-          onChange={(e) => handleChange(e?.target?.value || "", "lastName")}
-        />
-      </Grid>
-      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
-        <TextField
-          required
-          id="outlined-required"
-          label="User Name"
-          size="small"
-          onChange={(e) => handleChange(e?.target?.value || "", "userName")}
-        />
-      </Grid>
-      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
-        <TextField
-          required
-          id="outlined-required"
-          label="Display Name"
-          size="small"
-          onChange={(e) => handleChange(e?.target?.value || "", "displayName")}
-        />
-      </Grid>
-      <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
-        <TextField
-          required
-          id="outlined-required"
-          label="Mobile Nuumber"
-          size="small"
-          onChange={(e) => handleChange(e?.target?.value || "", "mobileNumber")}
-        />
-      </Grid>
-      <Grid>
-        <FormControl
-          style={{
-            width: "200px",
+        <Grid
+          sx={{
+            width: "50%",
+            justifyContent: "center",
+            alignItems: "center",
+            display: "inline-flex",
+            position: "relative",
           }}
         >
-          <InputLabel id="select-gender">Gender</InputLabel>
-          <Select
-            labelId="select-gender"
-            id="gender-simple-select"
-            value={formData?.gender || ""}
-            label="Gender"
-            onChange={(e) => handleChange(e?.target?.value || "", "gender")}
+          <IconButton
+            onClick={goBack}
+            style={{
+              left: "5px",
+              position: "absolute",
+              top: "5px",
+            }}
           >
-            <MenuItem value={"MALE"}>Male</MenuItem>
-            <MenuItem value={"FEMALE"}>Female</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid sx={{ margin: "10px" }}>
-        <TextField
-          id="outlined-password-input"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          size="small"
-          onChange={(e) => handleChange(e?.target?.value || "", "password")}
-        />
-      </Grid>
-      <Grid sx={{ margin: "10px" }}>
-        <TextField
-          id="outlined-password-input"
-          label="Confirm Password"
-          type="password"
-          autoComplete="current-password"
-          size="small"
-          onChange={(e) =>
-            handleChange(e?.target?.value || "", "confirmPassword")
-          }
-        />
-      </Grid>
-      <Grid>
-        <Button
-          onClick={(e) => handdleSubmit(formData)}
-          style={{
-            margin: "10px",
+            <ArrowBackIosIcon />
+          </IconButton>
+          <h2>SignUp</h2>
+        </Grid>
+        <Grid
+          sx={{
+            display: "inline-flex",
+            flexFlow: "column",
           }}
-          variant="contained"
         >
-          Submit
-        </Button>
+          <Grid
+            sx={{
+              display: "flex",
+            }}
+          >
+            <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+              <TextField
+                sx={{
+                  "& .MuiInputBase-root": {
+                    borderRadius: "20px",
+                    backgroundColor: "white",
+                    width: "80%",
+                  },
+                }}
+                required
+                id="outlined-required"
+                label="First Name"
+                size="small"
+                onChange={(e) =>
+                  handleChange(e?.target?.value || "", "firstName")
+                }
+              />
+            </Grid>
+            <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+              <TextField
+                sx={{
+                  "& .MuiInputBase-root": {
+                    borderRadius: "20px",
+                    backgroundColor: "white",
+                    width: "80%",
+                  },
+                }}
+                required
+                id="outlined-required"
+                label="Last Name"
+                size="small"
+                onChange={(e) =>
+                  handleChange(e?.target?.value || "", "lastName")
+                }
+              />
+            </Grid>
+          </Grid>
+          <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+            <TextField
+              sx={{
+                "& .MuiInputBase-root": {
+                  borderRadius: "20px",
+                  backgroundColor: "white",
+                  width: "80%",
+                },
+              }}
+              required
+              id="outlined-required"
+              label="User Name"
+              size="small"
+              onChange={(e) => handleChange(e?.target?.value || "", "userName")}
+            />
+          </Grid>
+          <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+            <TextField
+              sx={{
+                "& .MuiInputBase-root": {
+                  borderRadius: "20px",
+                  backgroundColor: "white",
+                  width: "80%",
+                },
+              }}
+              required
+              id="outlined-required"
+              label="Display Name"
+              size="small"
+              onChange={(e) =>
+                handleChange(e?.target?.value || "", "displayName")
+              }
+            />
+          </Grid>
+          <Grid lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+            <TextField
+              sx={{
+                "& .MuiInputBase-root": {
+                  borderRadius: "20px",
+                  backgroundColor: "white",
+                  width: "80%",
+                },
+              }}
+              required
+              id="outlined-required"
+              label="Mobile Nuumber"
+              size="small"
+              onChange={(e) =>
+                handleChange(e?.target?.value || "", "mobileNumber")
+              }
+            />
+          </Grid>
+          <Grid width={"200px"} lg={12} md={6} sm={4} sx={{ margin: "10px" }}>
+            <InputLabel id="select-gender">Gender</InputLabel>
+            <Select
+              sx={{
+                ".MuiSelect-root": {
+                  borderRadius: "20px",
+                  backgroundColor: "white",
+                  width: "80%",
+                },
+              }}
+              labelId="select-gender"
+              id="gender-simple-select"
+              value={formData?.gender || ""}
+              label="Gender"
+              onChange={(e) => handleChange(e?.target?.value || "", "gender")}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value={"MALE"}>Male</MenuItem>
+              <MenuItem value={"FEMALE"}>Female</MenuItem>
+            </Select>
+          </Grid>
+          <Grid sx={{ margin: "10px" }}>
+            <TextField
+              sx={{
+                "& .MuiInputBase-root": {
+                  borderRadius: "20px",
+                  backgroundColor: "white",
+                  width: "80%",
+                },
+              }}
+              id="outlined-password-input"
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              size="small"
+              onChange={(e) => handleChange(e?.target?.value || "", "password")}
+            />
+          </Grid>
+          <Grid sx={{ margin: "10px" }}>
+            <TextField
+              sx={{
+                "& .MuiInputBase-root": {
+                  borderRadius: "20px",
+                  backgroundColor: "white",
+                  width: "80%",
+                },
+              }}
+              id="outlined-password-input"
+              label="Confirm Password"
+              type="password"
+              autoComplete="current-password"
+              size="small"
+              onChange={(e) =>
+                handleChange(e?.target?.value || "", "confirmPassword")
+              }
+            />
+          </Grid>
+          <Grid>
+            <Button
+              onClick={(e) => handdleSubmit(formData)}
+              style={{
+                margin: "10px",
+              }}
+              variant="contained"
+            >
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
     </div>
   );

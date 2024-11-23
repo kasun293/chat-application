@@ -1,12 +1,12 @@
-import "./App.css";
-import { router } from "./routes/router";
-import { RouterProvider } from "react-router-dom";
+// import "./App.css";
+import AuthProvider from "./hooks/AuthProvider";
+import { Routes } from "./routes/Routes";
 
 function App() {
   return (
-    <>
-      <RouterProvider router={router} />
-    </>
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
 }
 

@@ -168,7 +168,7 @@ export const login = async (loginData) => {
     console.log({ login });
     if (response) {
       console.log({ response });
-      localStorage.setItem("token", response.data.accessToken); // Assuming the token is in response.data.token
+      localStorage.setItem("token", response.data.accessToken);
       return response;
     }
   } catch (error) {
