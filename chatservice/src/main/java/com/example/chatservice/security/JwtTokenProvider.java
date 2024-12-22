@@ -22,21 +22,15 @@ public class JwtTokenProvider {
 
     // generate JWT token
     public String generateToken(Authentication authentication){
-
         String username = authentication.getName();
-
         Date currentDate = new Date();
-
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
-
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(expireDate)
                 .signWith(key())
                 .compact();
-
-        return token;
     }
 
     private Key key(){
@@ -45,7 +39,6 @@ public class JwtTokenProvider {
 
     // get username from JWT token
     public String getUsername(String token){
-
         return Jwts.parser()
                 .verifyWith((SecretKey) key())
                 .build()
@@ -61,6 +54,5 @@ public class JwtTokenProvider {
                 .build()
                 .parse(token);
         return true;
-
     }
 }

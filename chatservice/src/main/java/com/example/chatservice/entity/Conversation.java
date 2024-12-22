@@ -27,7 +27,19 @@ public class Conversation {
     private Long createdDate;
     private Long createdBy;
 
-    @OneToMany(mappedBy = "conversation")
-    private List<User> users;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @ManyToMany
+    @JoinTable(name = "Conversation_Contact",
+            joinColumns = {
+            @JoinColumn(name = "conversation_id", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+            @JoinColumn(name = "contact_id", referencedColumnName = "id")
+            }
+    )
+    private List<Contact> contactList;
 
 }

@@ -8,10 +8,10 @@ import java.util.List;
 public interface MessageService {
 
     //save message
-    ResponseEntity<MessageDTO> saveMessage(MessageDTO messageDTO);
+    MessageDTO saveMessage(MessageDTO messageDTO);
 
     //delete message
 
     //get all messages by conversation
-    ResponseEntity<List<MessageDTO>> getAllMessagesByConversation(Long id);
+    List<MessageDTO> getAllMessagesByConversation(Long id);
 }

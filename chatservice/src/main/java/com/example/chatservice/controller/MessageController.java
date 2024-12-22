@@ -24,13 +24,13 @@ public class MessageController {
     }
 
     @GetMapping("/conversation/{id}")
-    public ResponseEntity<?> getAllMessagesByConversation(@PathVariable Long id) {
-        return messageService.getAllMessagesByConversation(id);
+    public ResponseEntity<?> getAllMessagesByConversation(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(messageService.getAllMessagesByConversation(id));
     }
 
     @MessageMapping("/chat.send-message")
     public ResponseEntity<?> sendMessage(@RequestBody MessageDTO messageDTO) {
         messagingTemplate.convertAndSend("/topic/" + messageDTO.getConversationId().toString(),messageDTO);
-        return messageService.saveMessage(messageDTO);
+        return ResponseEntity.ok(messageService.saveMessage(messageDTO));
     }
 }

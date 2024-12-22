@@ -23,5 +23,5 @@ public class ConversationDTO {
     private ConversationType conversationType;
     private Long createdDate;
     private Long createdBy;
-    private List<UserDTO> userDTOS;
+    private List<ContactDTO> contacts;
 }

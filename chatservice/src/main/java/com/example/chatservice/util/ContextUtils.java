@@ -1,9 +1,9 @@
 package com.example.chatservice.util;
 
 import com.example.chatservice.entity.User;
+import com.example.chatservice.exception.NotFoundException;
 import com.example.chatservice.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.apache.coyote.BadRequestException;
+import com.example.chatservice.exception.BadRequestException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.context.SecurityContext;
@@ -23,21 +23,21 @@ public class ContextUtils {
         this.userRepository = userRepository;
     }
 
-    public String getLoggedInUser() throws BadRequestException {
+    public String getLoggedInUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         this.verifyContext(context);
         return ((UserDetails) context.getAuthentication().getPrincipal()).getUsername();
     }
 
-    public User getLoggedInUserEntity() throws BadRequestException {
+    public User getLoggedInUserEntity() {
         SecurityContext context = SecurityContextHolder.getContext();
         this.verifyContext(context);
         return userRepository.findByUserName(((UserDetails) context.getAuthentication().getPrincipal()).getUsername())
-                .orElseThrow(() -> new EntityNotFoundException("Logged in user not found"));
+                .orElseThrow(() -> new NotFoundException("Logged in user not found"));
     }
 
 
-    private void verifyContext(SecurityContext context) throws BadRequestException {
+    private void verifyContext(SecurityContext context) {
 
         if (context == null) {
             throw new BadRequestException("Could not retrieve the security context.");

@@ -33,9 +33,8 @@ public class User implements UserDetails {
     private String displayName;
     private String mobileNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "conversation_id", referencedColumnName = "id")
-    private Conversation conversation;
+    @OneToMany(mappedBy = "user")
+    private List<Conversation> conversations;
 
     @OneToMany(mappedBy = "user")
     private List<Contact> contacts;
