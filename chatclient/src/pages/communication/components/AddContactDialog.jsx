@@ -7,17 +7,14 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  MenuItem,
-  Select,
   TextField,
   colors,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { DEF_ACTIONS } from "../constants/permissions";
-import { FieldName } from "../components/FieldName";
-import { Fonts } from "../constants/Fonts";
+import { FieldName } from "../../../components/FieldName";
+import { Fonts } from "../../../constants/Fonts";
+import { DEF_ACTIONS } from "../../../constants/permissions";
 
-const CreateGroupDialog = ({
+const AddContactDialog = ({
   open,
   handleClose,
   confirmAction,
@@ -26,48 +23,22 @@ const CreateGroupDialog = ({
   handleChange,
   action,
 }) => {
-  const [options, setOptions] = useState([]);
-  const [cropOptions, setCropOptions] = useState([]);
-  const [gnOptions, setGnOptions] = useState([]);
-
-  console.log(options);
-  console.log(cropOptions);
-  console.log(gnOptions);
-
-  useEffect(() => {
-    // getAllAiAndMahaweliUnits().then(({ dataList = [] }) => {
-    setOptions();
-    // });
-    // get_CropList().then(({ dataList = [] }) => {
-    //   let newDtaList = dataList.map((item) => {
-    //     return { value: item.id, name: item.description };
-    //   });
-    setCropOptions();
-    // });
-    // get_GnDivisionListWithoutPage().then(({ dataList = [] }) => {
-    //   let newGnOptions = dataList.map((item) => {
-    //     return { value: item.id, name: item.name };
-    //   });
-    setGnOptions();
-    // });
-  }, []);
-
   return (
     <Dialog
-      className="create-group-dialog"
+      className="add-contact-dialog"
       open={open}
       onClose={handleClose}
-      aria-labelledby="new-group"
-      aria-describedby="add a new group"
+      aria-labelledby="add-contact"
+      aria-describedby="add a new contact"
       PaperProps={{ sx: { borderRadius: "15px", backgroundColor: "#ACE1AF" } }}
     >
       <DialogTitle
-        id="new-group"
+        id="new-contact"
         style={{
           fontFamily: Fonts.fontStyle1,
         }}
       >
-        {mode} Create New Group
+        {mode} Add New Contact
       </DialogTitle>
       <DialogContent>
         <Box sx={{ display: "flex" }}>
@@ -86,16 +57,14 @@ const CreateGroupDialog = ({
                     width: "100%",
                   }}
                 >
-                  Group Name
+                  Name
                 </FieldName>
                 <TextField
-                  name="groupName"
-                  id="groupName"
-                  value={formData?.conversationName || ""}
+                  name="name"
+                  id="name"
+                  value={formData?.name || ""}
                   disabled={action === DEF_ACTIONS.VIEW}
-                  onChange={(e) =>
-                    handleChange(e?.target?.value || "", "conversationName")
-                  }
+                  onChange={(e) => handleChange(e?.target?.value || "", "name")}
                   size="small"
                   fullWidth
                   sx={{
@@ -112,15 +81,15 @@ const CreateGroupDialog = ({
                     width: "100%",
                   }}
                 >
-                  Description
+                  Phone Number
                 </FieldName>
                 <TextField
-                  name="description"
-                  id="description"
-                  value={formData?.description || ""}
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  value={formData?.phone || ""}
                   disabled={action === DEF_ACTIONS.VIEW}
                   onChange={(e) =>
-                    handleChange(e?.target?.value || "", "description")
+                    handleChange(e?.target?.value || "", "phone")
                   }
                   size="small"
                   fullWidth
@@ -131,26 +100,6 @@ const CreateGroupDialog = ({
                     },
                   }}
                 />
-              </div>
-              <div>
-                <FieldName>Filter Type</FieldName>
-                <Select
-                  name="filterType"
-                  id="filterType"
-                  value={formData?.filterType || ""}
-                  disabled={action === DEF_ACTIONS.VIEW}
-                  onChange={(e) =>
-                    handleChange(e?.target?.value || "", "filterType")
-                  }
-                  fullWidth
-                  sx={{
-                    borderRadius: "8px",
-                  }}
-                  size="small"
-                >
-                  <MenuItem value={"GROUP"}>Group</MenuItem>
-                  <MenuItem value={"PRIVATE"}>Private</MenuItem>
-                </Select>
               </div>
             </Grid>
           </Grid>
@@ -182,4 +131,4 @@ const CreateGroupDialog = ({
   );
 };
 
-export default CreateGroupDialog;
+export default AddContactDialog;

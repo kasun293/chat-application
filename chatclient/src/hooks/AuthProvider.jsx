@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { createContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AuthContext } from "./authContext";
 
-export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   // State to hold the authentication token

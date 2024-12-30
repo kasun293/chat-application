@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { Box, Grid, styled } from "@mui/material";
-
+import { Box, Grid, styled, Typography } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const SingleConversation = ({
   conversation,
@@ -8,7 +8,7 @@ const SingleConversation = ({
   isSelected,
 }) => {
   return (
-    <div className="single-conversation">
+    <Box>
       <HoverBox
         sx={{ backgroundColor: isSelected ? "#1bc247" : "lightgreen" }}
         borderRadius={"10px"}
@@ -22,23 +22,27 @@ const SingleConversation = ({
           container
           direction="row"
           alignItems={"center"}
-          justifyContent={"space-around"}
+          // alignContent={"center"}
+          justifyContent={"space-between"}
         >
-          <h4>{conversation?.groupId}</h4>
+          <AccountCircleIcon sx={{ px: 1 }} fontSize="large" />
+          <Typography>{conversation?.groupId}</Typography>
+          <Typography>{"23:12"}</Typography>
           {/* <p >{conversation?.description}</p> */}
         </Grid>
       </HoverBox>
-    </div>
+    </Box>
   );
 };
 
 const HoverBox = styled(Box)`
   border-radius: 10px;
   background-color: lightgreen;
-  height: 50px;
+  height: 40px;
   border: 1px solid green;
   margin: 5px;
   transition: background-color 0.3s;
+  align-content: center;
 
   &:hover {
     background-color: green;

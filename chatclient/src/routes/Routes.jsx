@@ -1,10 +1,10 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import NotFoudPage from "../components/NotFoudPage";
-import Login from "../communication/Login";
-import SignUp from "../communication/SignUp";
-import Chat from "../communication/Chat";
 import { useAuth } from "../hooks/useAuth";
 import ProtectedRoute from "./ProtectedRoute";
+import Login from "../pages/login/Login";
+import SignUp from "../pages/signup/SignUp";
+import Chat from "../pages/communication/Chat";
 
 export const Routes = () => {
   const routesForAuthenticatedOnly = [

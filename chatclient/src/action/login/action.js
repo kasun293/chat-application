@@ -1,4 +1,6 @@
 import axios from "axios";
+import { StorageConstants } from "../../constants/storage-constants";
+import { BASE_URL } from "../../api";
 // import { authAxios } from "../api/api";
 
 export const fetchUserList = async () => {
@@ -157,7 +159,7 @@ export const createGroupConversation = async () => {
 export const login = async (loginData) => {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/v1/users/login",
+      BASE_URL + "users/login",
       loginData,
       {
         headers: {
@@ -165,10 +167,9 @@ export const login = async (loginData) => {
         },
       }
     );
-    console.log({ login });
     if (response) {
       console.log({ response });
-      localStorage.setItem("token", response.data.accessToken);
+      localStorage.setItem(StorageConstants.token, response.data.accessToken);
       return response;
     }
   } catch (error) {

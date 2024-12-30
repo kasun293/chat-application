@@ -2,7 +2,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import ChatMessage from "./ChatMessage";
-import { getMessageList } from "../action/action";
+import { getMessageList } from "../../../action/login/action";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
@@ -12,9 +12,15 @@ const ChatPage = ({ conversation, user }) => {
   const messagesEndRef = useRef(null);
   const [client, setClient] = useState(null);
   const type = "GROUP";
-  const value = conversation?.id;
 
   useEffect(() => {
+    const fetchMessages = () => {
+      getMessageList(type, conversation?.id).then(({ dataList = [] }) => {
+        setMessages(dataList);
+        console.log({ dataList });
+      });
+    };
+
     setMessages([]);
     fetchMessages();
     const newClient = new Client({
@@ -42,13 +48,6 @@ const ChatPage = ({ conversation, user }) => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  const fetchMessages = () => {
-    getMessageList(type, value).then(({ dataList = [] }) => {
-      setMessages(dataList);
-      console.log({ dataList });
-    });
-  };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -131,10 +130,10 @@ const ChatPage = ({ conversation, user }) => {
               width: "94px",
               height: "42px",
               borderRadius: "36px",
-            backgroundColor: "#78ABA8",
-            ':hover': {
-                  backgroundColor: "#538392"
-                },
+              backgroundColor: "#78ABA8",
+              ":hover": {
+                backgroundColor: "#538392",
+              },
             }}
             onClick={publishMessage}
           >
