@@ -8,11 +8,11 @@ public enum ResultStatus {
 
     private final String label;
 
-    ResultStatus(String label){
+    ResultStatus(String label) {
         this.label = label;
     }
 
-    public String getLabel(){
+    public String getLabel() {
         return label;
     }
 }

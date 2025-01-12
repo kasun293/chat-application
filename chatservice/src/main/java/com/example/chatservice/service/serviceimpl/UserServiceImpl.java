@@ -46,10 +46,10 @@ public class UserServiceImpl implements UserService {
 //        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(user);
         return UserDTO.builder()
-                        .id(user.getId())
-                        .userName(user.getUsername())
-                        .firstName(userDto.getFirstName())
-                        .lastName(user.getLastName())
+                .id(user.getId())
+                .userName(user.getUsername())
+                .firstName(userDto.getFirstName())
+                .lastName(user.getLastName())
                 .build();
     }
 
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ContactDTO> getContactsByUserId(Long userId)   {
+    public List<ContactDTO> getContactsByUserId(Long userId) {
         return contactService.getAllContactsByUserId(userId);
     }
 

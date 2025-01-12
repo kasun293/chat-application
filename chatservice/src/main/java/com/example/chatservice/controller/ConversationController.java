@@ -21,7 +21,7 @@ public class ConversationController {
     public ResponseEntity<ConversationDTO> createConversation(@RequestBody ConversationDTO conversationDTO) {
         return ResponseEntity.ok(conversationService.createConversation(conversationDTO));
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<ConversationDTO> updateConversation(@PathVariable("id") Long id,
                                                               @RequestBody ConversationDTO conversationDTO) {

@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @GetMapping("/greetings")
-    public ResponseEntity<String> greetings() {
-        return ResponseEntity.ok("Hello World");
+    public String greetings() {
+        return "hello";
     }
 
     @PostMapping("/authenticate")
@@ -43,7 +43,7 @@ public class UserController {
         return jwtService.generateToken(authRequest.getUsername());
     }
 
-//    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> login(@RequestBody AuthRequestDTO loginDto) {
         String token = authService.login(loginDto);
@@ -51,7 +51,7 @@ public class UserController {
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
         jwtAuthResponse.setAccessToken(token);
 
-        return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
+        return ResponseEntity.ok(jwtAuthResponse);
     }
 
     @GetMapping("/logged-in-user")

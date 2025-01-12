@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class ResultsDTO {
 
-//    @ApiModelProperty(
+    //    @ApiModelProperty(
 //            notes = "Service message",
 //            position = 1)
     MessageResponseDTO message;
@@ -26,7 +26,7 @@ public class ResultsDTO {
 //            position = 3)
     HttpStatus httpStatus;
 
-//    @ApiModelProperty(
+    //    @ApiModelProperty(
 //            notes = "Standard http code of the Response",
 //            position = 4)
     String httpCode;

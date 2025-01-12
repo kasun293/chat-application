@@ -1,7 +1,6 @@
 package com.example.chatservice.service;
 
 import com.example.chatservice.dto.MessageDTO;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 

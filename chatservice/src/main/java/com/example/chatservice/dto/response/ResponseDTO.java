@@ -5,7 +5,7 @@ import com.example.chatservice.enums.ResultStatus;
 import org.springframework.http.HttpStatus;
 
 
-public class ResponseDTO<T> extends ResultsDTO{
+public class ResponseDTO<T> extends ResultsDTO {
 
     private T payload;
 

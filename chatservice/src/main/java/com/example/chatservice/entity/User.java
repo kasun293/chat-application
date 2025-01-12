@@ -1,16 +1,16 @@
 package com.example.chatservice.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -27,7 +27,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String gender;
-//    private LocalDate birthDate;
+    //    private LocalDate birthDate;
     private String userName;
     private String password;
     private String displayName;
@@ -68,6 +68,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
     @Override
     public String getPassword() {
         return password;

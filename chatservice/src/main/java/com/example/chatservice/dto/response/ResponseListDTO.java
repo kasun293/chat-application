@@ -3,16 +3,18 @@ package com.example.chatservice.dto.response;
 import com.example.chatservice.enums.ResultStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseListDTO<T> extends ResultsDTO{
+public class ResponseListDTO<T> extends ResultsDTO {
 
     private List<T> payloadDto;
     private int totalPages;

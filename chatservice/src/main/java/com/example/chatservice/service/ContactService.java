@@ -1,8 +1,6 @@
 package com.example.chatservice.service;
 
 import com.example.chatservice.dto.ContactDTO;
-import lombok.SneakyThrows;
-import org.apache.coyote.BadRequestException;
 
 import java.util.List;
 

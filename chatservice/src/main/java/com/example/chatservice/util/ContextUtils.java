@@ -1,9 +1,9 @@
 package com.example.chatservice.util;
 
 import com.example.chatservice.entity.User;
+import com.example.chatservice.exception.BadRequestException;
 import com.example.chatservice.exception.NotFoundException;
 import com.example.chatservice.repository.UserRepository;
-import com.example.chatservice.exception.BadRequestException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.context.SecurityContext;

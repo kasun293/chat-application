@@ -34,10 +34,10 @@ public class Conversation {
     @ManyToMany
     @JoinTable(name = "Conversation_Contact",
             joinColumns = {
-            @JoinColumn(name = "conversation_id", referencedColumnName = "id")
+                    @JoinColumn(name = "conversation_id", referencedColumnName = "id")
             },
             inverseJoinColumns = {
-            @JoinColumn(name = "contact_id", referencedColumnName = "id")
+                    @JoinColumn(name = "contact_id", referencedColumnName = "id")
             }
     )
     private List<Contact> contactList;
