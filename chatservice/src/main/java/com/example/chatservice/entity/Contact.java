@@ -26,6 +26,6 @@ public class Contact {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "contactList")
     private List<Conversation> conversations;
 }

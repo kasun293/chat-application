@@ -1,7 +1,9 @@
 package com.example.chatservice.service.serviceimpl;
 
+import com.example.chatservice.dto.ContactDTO;
 import com.example.chatservice.dto.ConversationDTO;
 import com.example.chatservice.dto.MessageDTO;
+import com.example.chatservice.entity.Contact;
 import com.example.chatservice.entity.Conversation;
 import com.example.chatservice.entity.User;
 import com.example.chatservice.exception.NotFoundException;
@@ -13,6 +15,7 @@ import com.example.chatservice.util.MapperUtil;
 import com.example.chatservice.util.ServiceUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,7 +39,15 @@ public class ConversationServiceImpl implements ConversationService {
     public ConversationDTO createConversation(ConversationDTO conversationDTO) {
         Long date = ServiceUtil.timeStampGenerator();
         User user = contextUtils.getLoggedInUserEntity();
+        List<Contact> contactList = new ArrayList<>();
         Conversation conversation = MapperUtil.map(conversationDTO, Conversation.class);
+        if(!conversationDTO.getContacts().isEmpty()) {
+            for(ContactDTO contactDTO : conversationDTO.getContacts()) {
+                contactList.add(MapperUtil.map(contactDTO, Contact.class));
+            }
+        }
+        conversation.setContactList(contactList);
+        conversation.setConversationType(conversationDTO.getConversationType());
         conversation.setCreatedDate(date);
         conversation.setCreatedBy(user.getId());
         conversation.setUser(user);

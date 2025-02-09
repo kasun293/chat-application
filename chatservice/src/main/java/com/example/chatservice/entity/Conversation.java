@@ -31,7 +31,7 @@ public class Conversation {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "Conversation_Contact",
             joinColumns = {
                     @JoinColumn(name = "conversation_id", referencedColumnName = "id")
