@@ -16,20 +16,20 @@ import {
   getUserProfile,
   updateGroupConversation,
 } from "../../action/login/action";
-// import { Add } from "@mui/icons-material";
 import ChatPage from "./components/ChatPage";
 import CreateGroupDialog from "./components/CreateGroupDialog";
 import DialogBox from "../../components/DialogBox";
-// import FloatingActionButtons from "../../components/FloatingActionButtons";
 import AddContactDialog from "./components/AddContactDialog";
 import SingleConversation from "./components/SingleConversation";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import IconButton from "@mui/material/IconButton";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
+import SockJS from "sockjs-client";
+import { Client } from "@stomp/stompjs";
+import { BASE_URL } from "../../api";
 
 const Chat = () => {
   const [conversation, setConversation] = useState(null);
-  console.log({ conversation });
   const [conversationList, setconversationList] = useState([
     { id: 1, groupId: "group one" },
     { id: 2, groupId: "group two" },
@@ -53,18 +53,14 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-
-  console.log({ contactOpen });
-  // const containerRef = useRef(null);
+  const [messages, setMessages] = useState([]);
+  const [client, setClient] = useState(null);
   const [action, setAction] = useState(DEF_ACTIONS.ADD);
-
-  console.log({ formData });
 
   useEffect(() => {
     const selectUser = async () => {
       getUserProfile()
         .then((response) => {
-          console.log({ response });
           setUser(response.data);
         })
         .catch((e) => {
@@ -74,10 +70,10 @@ const Chat = () => {
 
     selectUser();
   }, []);
+
   useEffect(() => {
     const fetchconversationList = async () => {
       getConversationList().then(({ dataList = [] }) => {
-        console.log({ dataList });
         setconversationList(dataList);
       });
     };
@@ -91,7 +87,6 @@ const Chat = () => {
         !event.target.closest(".chat-list") &&
         !event.target.closest(".message-window")
       ) {
-        console.log("clicked outside");
         setConversation(null);
       }
     };
@@ -101,6 +96,34 @@ const Chat = () => {
       document.removeEventListener("click", handleClickOutside, false);
     };
   }, []);
+
+  useEffect(() => {
+
+    setMessages([]);
+    const newClient = new Client({
+      webSocketFactory: () => new SockJS(BASE_URL + "ws-endpoint"),
+
+      onConnect: () => {
+        conversationList.forEach((item) => {
+          newClient.subscribe(`/topic/${item.id}`, (message) => {
+            const newMessage = JSON.parse(message.body);
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+          });
+        });
+      },
+      onStompError: (frame) => {
+        console.log("Broker reported error: " + frame.headers["message"]);
+        console.log("Additional details: " + frame.body);
+      },
+    });
+
+    newClient.activate();
+    setClient(newClient);
+
+    return () => {
+      newClient.deactivate();
+    };
+  }, [conversationList]);
 
   const selectConversation = (groupId) => {
     const selectedGroup = conversationList.find(
@@ -117,10 +140,6 @@ const Chat = () => {
       return newData;
     });
   };
-
-  // const handleContactOpen = () => {
-  //   setContactOpen(true);
-  // };
 
   const handleContactClose = () => {
     setContactOpen(false);
@@ -211,7 +230,7 @@ const Chat = () => {
               height: "75vh",
               overflow: "auto",
               position: "relative",
-              border: "1px solid pink",
+              border: "none",
               borderRadius: "20px",
               boxShadow:
                 "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
@@ -302,7 +321,13 @@ const Chat = () => {
           </Box>
         </Grid>
         <Grid className="message-window" item xs={4} md={8} lg={8}>
-          <ChatPage conversation={conversation} user={user} />
+          <ChatPage
+            conversation={conversation}
+            list={conversationList}
+            user={user}
+            client={client}
+            messages={messages}
+          />
         </Grid>
         <AddContactDialog
           open={contactOpen}

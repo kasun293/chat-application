@@ -21,15 +21,12 @@ export const fetchUserList = async () => {
 
 export const signUp = async (payload = {}) => {
   try {
-    const response = await axios.post(
-      "http://localhost:8080/api/v1/users/register",
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(BASE_URL + "users/register", payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "",
+      },
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -158,15 +155,13 @@ export const createGroupConversation = async () => {
 
 export const login = async (loginData) => {
   try {
-    const response = await axios.post(
-      BASE_URL + "users/login",
-      loginData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(BASE_URL + "users/login", loginData, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "",
+      },
+      // withCredentials: true,
+    });
     if (response) {
       console.log({ response });
       localStorage.setItem(StorageConstants.token, response.data.accessToken);
