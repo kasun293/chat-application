@@ -1,11 +1,9 @@
 package com.example.chatservice.controller;
 
 import com.example.chatservice.dto.AuthRequestDTO;
-import com.example.chatservice.dto.ContactDTO;
 import com.example.chatservice.dto.JwtAuthResponse;
 import com.example.chatservice.dto.UserDTO;
 import com.example.chatservice.dto.response.ResponseDTO;
-import com.example.chatservice.dto.response.ResponseListDTO;
 import com.example.chatservice.service.AuthService;
 import com.example.chatservice.service.ContactService;
 import com.example.chatservice.service.JwtService;

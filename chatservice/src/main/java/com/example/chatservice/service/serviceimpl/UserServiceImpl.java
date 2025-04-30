@@ -1,7 +1,5 @@
 package com.example.chatservice.service.serviceimpl;
 
-import com.example.chatservice.dto.ContactDTO;
-import com.example.chatservice.dto.ConversationDTO;
 import com.example.chatservice.dto.UserDTO;
 import com.example.chatservice.entity.User;
 import com.example.chatservice.exception.BadRequestException;
@@ -10,12 +8,10 @@ import com.example.chatservice.service.ContactService;
 import com.example.chatservice.service.ConversationService;
 import com.example.chatservice.service.UserService;
 import com.example.chatservice.util.ContextUtils;
-import com.example.chatservice.util.MapperUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
