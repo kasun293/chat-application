@@ -6,6 +6,7 @@ import com.example.chatservice.dto.MessageDTO;
 import com.example.chatservice.entity.Contact;
 import com.example.chatservice.entity.Conversation;
 import com.example.chatservice.entity.User;
+import com.example.chatservice.exception.BadRequestException;
 import com.example.chatservice.exception.NotFoundException;
 import com.example.chatservice.repository.ConversationRepository;
 import com.example.chatservice.service.ConversationService;
@@ -45,6 +46,8 @@ public class ConversationServiceImpl implements ConversationService {
             for(ContactDTO contactDTO : conversationDTO.getContacts()) {
                 contactList.add(MapperUtil.map(contactDTO, Contact.class));
             }
+        } else {
+            throw new BadRequestException("At least one contact must be provided");
         }
         conversation.setContactList(contactList);
         conversation.setConversationType(conversationDTO.getConversationType());
@@ -73,5 +76,19 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public List<ConversationDTO> getAllConversationsByUserId(Long id) {
         return MapperUtil.mapAll(conversationRepository.findAllByUserId(id), ConversationDTO.class);
+    }
+
+    @Override
+    public List<ConversationDTO> getAllConversations() {
+        User user = contextUtils.getLoggedInUserEntity();
+        List<Conversation> conversationList = conversationRepository.findAllByUser(user.getId());
+        List<ConversationDTO> conversationDTOList = new ArrayList<>();
+        for (Conversation conversation : conversationList) {
+            ConversationDTO conversationDTO = MapperUtil.map(conversation, ConversationDTO.class);
+            conversationDTO.setContacts(MapperUtil.mapAll(conversation.getContactList(), ContactDTO.class));
+            conversationDTO.setCreatorName(conversation.getUser().getDisplayName());
+            conversationDTOList.add(conversationDTO);
+        }
+        return conversationDTOList;
     }
 }

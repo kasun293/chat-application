@@ -1,6 +1,7 @@
 package com.example.chatservice.service;
 
 import com.example.chatservice.dto.ContactDTO;
+import com.example.chatservice.dto.response.ResponseListDTO;
 
 import java.util.List;
 
@@ -14,5 +15,6 @@ public interface ContactService {
 
     List<ContactDTO> getAllContactsByUserId(Long id);
 
-//    ContactDTO createContact(ContactDTO contactDTO) throws BadRequestException;
+    ResponseListDTO<ContactDTO> getAllContactsByLoggedInUser();
+
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.relational.core.mapping.Column;
 
 import java.util.List;
 
@@ -19,7 +20,9 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     // this is my friend's account user ID
-    private Long contactUserId;
+    @ManyToOne
+    @JoinColumn(name = "contact_user_id", referencedColumnName = "id")
+    private User contactUser;
     private String contactName;
     // this is the contact owner eg: this is me
     @ManyToOne

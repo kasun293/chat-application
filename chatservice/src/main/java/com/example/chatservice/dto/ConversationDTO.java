@@ -24,4 +24,5 @@ public class ConversationDTO {
     private Long createdDate;
     private Long createdBy;
     private List<ContactDTO> contacts;
+    private String creatorName;
 }

@@ -1,13 +1,16 @@
 package com.example.chatservice.controller;
 
 import com.example.chatservice.dto.AuthRequestDTO;
+import com.example.chatservice.dto.ContactDTO;
 import com.example.chatservice.dto.JwtAuthResponse;
 import com.example.chatservice.dto.UserDTO;
+import com.example.chatservice.dto.response.ResponseDTO;
+import com.example.chatservice.dto.response.ResponseListDTO;
 import com.example.chatservice.service.AuthService;
 import com.example.chatservice.service.ContactService;
 import com.example.chatservice.service.JwtService;
 import com.example.chatservice.service.UserService;
-import org.apache.coyote.BadRequestException;
+import com.example.chatservice.util.ServiceUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) throws BadRequestException {
+    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(userDTO));
     }
 
@@ -55,13 +58,17 @@ public class UserController {
     }
 
     @GetMapping("/logged-in-user")
-    public ResponseEntity<?> getLoggedInUser() throws BadRequestException {
-        return ResponseEntity.ok(userService.getLoggedInUser());
+    public ResponseDTO<?> getLoggedInUser() {
+        ResponseDTO<UserDTO> responseDTO = new ResponseDTO<>();
+        responseDTO.setPayload(userService.getLoggedInUser());
+        return ServiceUtil.updateResponse(responseDTO);
     }
 
     @GetMapping("/{id}/contacts")
-    public ResponseEntity<?> getContacts(@PathVariable("id") Long id) throws BadRequestException {
-        return ResponseEntity.ok(userService.getContactsByUserId(id));
+    public ResponseListDTO<?> getContacts(@PathVariable("id") Long id) {
+        ResponseListDTO<ContactDTO> responseListDTO = new ResponseListDTO<>();
+        responseListDTO.setPayloadDto(userService.getContactsByUserId(id));
+        return ServiceUtil.updateResponse(responseListDTO);
     }
 
     @GetMapping("/{id}/conversations")

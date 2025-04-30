@@ -16,4 +16,6 @@ public interface ConversationService {
     Boolean deleteConversation(Long id);
 
     List<ConversationDTO> getAllConversationsByUserId(Long id);
+
+    List<ConversationDTO> getAllConversations();
 }

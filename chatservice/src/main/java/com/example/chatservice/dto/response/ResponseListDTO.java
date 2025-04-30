@@ -25,6 +25,10 @@ public class ResponseListDTO<T> extends ResultsDTO {
     private Sort sort;
     private int numberOfElements;
 
+    public ResponseListDTO(List<T> payloadDto) {
+        this.payloadDto = payloadDto;
+    }
+
     public static ResponseListDTO<?> generateResponse(ResponseListDTO<?> response) {
         response.setResultStatus(ResultStatus.SUCCESSFUL);
         response.setHttpStatus(HttpStatus.OK);

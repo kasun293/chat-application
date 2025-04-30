@@ -87,7 +87,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getLoggedInUser() {
         User user = contextUtils.getLoggedInUserEntity();
-        return MapperUtil.map(user, UserDTO.class);
+
+        return UserDTO.builder()
+                .id(user.getId())
+                .userName(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .displayName(user.getDisplayName())
+                .gender(user.getGender())
+                .build();
     }
 
     @Override

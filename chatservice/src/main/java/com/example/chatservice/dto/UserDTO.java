@@ -12,16 +12,16 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
     private Long id;
-    @NonNull
     private String firstName;
     private String lastName;
     private String gender;
-    //    private LocalDate birthDate;
     private String userName;
     private String password;
     private String confirmPassword;
     private String displayName;
     private String mobileNumber;
-    private ConversationDTO conversationDTO;
-    private List<ConversationDTO> conversationDTOList;
+
+    private List<ConversationDTO> conversations;
+
+    private List<ContactDTO> contacts;
 }
