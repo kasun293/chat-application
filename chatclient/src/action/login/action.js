@@ -1,6 +1,7 @@
 import axios from "axios";
 import { StorageConstants } from "../../constants/storage-constants";
 import { BASE_URL } from "../../api";
+import { get } from "../axios";
 // import { authAxios } from "../api/api";
 
 export const fetchUserList = async () => {
@@ -49,21 +50,21 @@ export const getMessageList = async () => {
   }
 };
 
-export const getConversationList = async () => {
-  try {
-    const response = await axios.get("url");
-    if (response.ok) {
-      return { dataList: response.payload };
-    } else {
-      const exception = {
-        apiError: response.message,
-      };
-      throw exception;
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const getConversationList = async () => {
+//   try {
+//     const response = await axios.get("conversations");
+//     if (response.ok) {
+//       return { dataList: response.payload };
+//     } else {
+//       const exception = {
+//         apiError: response.message,
+//       };
+//       throw exception;
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const deleteConversation = async (
   formData,
@@ -85,11 +86,30 @@ export const deleteConversation = async (
   }
 };
 
-export const getUserProfile = async () => {
+// export const getUserProfile = async () => {
+//   try {
+//     const response = await axios.get("url");
+//     if (response.ok) {
+//       return response;
+//     } else {
+//       const exception = {
+//         apiError: response.message,
+//       };
+//       throw exception;
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+export const getUserProfile = async (
+  onSuccess = () => {},
+  onError = (_message) => {}
+) => {
   try {
-    const response = await axios.get("url");
-    if (response.ok) {
-      return response;
+    const response = await get("users/logged-in-user", true);
+    if (response?.httpCode === "200 OK") {
+      return response?.payload;
     } else {
       const exception = {
         apiError: response.message,

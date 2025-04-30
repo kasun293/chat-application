@@ -33,7 +33,6 @@ const ChatPage = ({ conversation, user, client, messages }) => {
     if (client && conversation?.id && messageInputRef.current.value) {
       const chatMessage = {
         content: messageInputRef.current.value,
-        recipientType: "GROUP",
         conversationId: conversation?.id,
         senderId: user?.id,
         senderName: `${user?.firstName} ${user?.lastName}`,

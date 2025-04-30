@@ -8,13 +8,15 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../action/login/action";
 import logo from "../../assets/BLAZE-logo.png";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log({ location });
 
   const handleChange = (value, target) => {
     setFormData((currentData = {}) => {
@@ -26,7 +28,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     login(formData).then((response) => {
-      if (response?.status === 200) {
+      if (response?.data?.accessToken) {
         navigate("/chat");
       }
     });
@@ -35,7 +37,8 @@ const Login = () => {
   return (
     <>
       <Box
-        margin={"auto"}
+        display={"grid"}
+        // margin={"auto"}
         width={"100%"}
         justifyItems={"center"}
         position={"absolute"}
@@ -43,8 +46,9 @@ const Login = () => {
         sx={{ transform: "translateY(-50%)" }}
       >
         <Card
+          margin={"auto"}
           sx={{
-            width: "60%",
+            width: "40%",
             height: "80%",
             p: 2,
           }}

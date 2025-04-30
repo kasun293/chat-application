@@ -2,32 +2,32 @@
 import { Avatar, Box } from "@mui/material";
 import { stringAvatar } from "../../../constants/stringUtils";
 
-
 const ChatMessage = ({ message, user }) => {
+  console.log({ message });
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: message.senderId === user.id ? "flex-end" : "flex-start",
+        alignItems: message?.senderId === user?.id ? "flex-end" : "flex-start",
         margin: "10px 0",
       }}
     >
       <Box
         sx={{
-          marginRight: message.senderId === user.id ? "8px" : "auto",
+          marginRight: message?.senderId === user?.id ? "8px" : "auto",
           display: "flex",
-          flexDirection: message.senderId === user.id ? "row-reverse" : "row",
+          flexDirection: message?.senderId === user?.id ? "row-reverse" : "row",
           alignItems: "center",
           gap: 1,
         }}
       >
-        <Avatar {...stringAvatar(message.senderName)} size="35" round={true} />
-        <h4>{message.senderName}</h4>
+        <Avatar {...stringAvatar(message?.senderName)} size="35" round={true} />
+        <h4>{message?.senderName}</h4>
       </Box>
       <Box
         sx={{
-          marginRight: message.senderId === user.id ? "8px" : "auto",
+          marginRight: message?.senderId === user?.id ? "8px" : "auto",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -38,7 +38,7 @@ const ChatMessage = ({ message, user }) => {
           paddingRight: "10px",
           paddingLeft: "10px",
           borderRadius: "16px",
-          backgroundColor: "success.main",
+          backgroundColor: "#5762FF",
           wordWrap: "break-word",
         }}
       >

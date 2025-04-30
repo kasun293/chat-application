@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import {
+  Alert,
   Box,
   Button,
   Dialog,
@@ -7,22 +8,77 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  Snackbar,
   TextField,
   colors,
 } from "@mui/material";
 import { FieldName } from "../../../components/FieldName";
 import { Fonts } from "../../../constants/Fonts";
 import { DEF_ACTIONS } from "../../../constants/permissions";
+// import { create } from "@mui/material/styles/createTransitions";
+import { useEffect, useState } from "react";
+import { createContact, updateContact } from "../../../action/contact/action";
 
 const AddContactDialog = ({
   open,
   handleClose,
-  confirmAction,
-  formData,
   mode,
-  handleChange,
   action,
+  setLoading,
+  selectedContact,
 }) => {
+  const [formData, setFormData] = useState({});
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success", // 'error' | 'info' | 'warning'
+  });
+  useEffect(() => {
+    if (action === DEF_ACTIONS.EDIT) {
+      setFormData(selectedContact);
+    }
+  }, [action, selectedContact]);
+  console.log({ selectedContact, action });
+  const handleChange = (value, key) => {
+    setFormData((currentData = {}) => {
+      let newData = { ...currentData };
+      newData[key] = value;
+      return newData;
+    });
+  };
+  const onSuccess = () => {
+    setSnackbar({
+      open: true,
+      message: "Contact saved successfully!",
+      severity: "success",
+    });
+  };
+
+  const onError = (message) => {
+    setSnackbar({
+      open: true,
+      message: message || "Something went wrong!",
+      severity: "error",
+    });
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+  const confirmAction = async (event, data, mode) => {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      if (formData?.id) {
+        await updateContact(data, onSuccess, onError);
+      } else {
+        await createContact(data, onSuccess, onError);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Dialog
       className="add-contact-dialog"
@@ -38,7 +94,7 @@ const AddContactDialog = ({
           fontFamily: Fonts.fontStyle1,
         }}
       >
-        {mode} Add New Contact
+        {action} Contact
       </DialogTitle>
       <DialogContent>
         <Box sx={{ display: "flex" }}>
@@ -107,7 +163,10 @@ const AddContactDialog = ({
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={handleClose}
+          onClick={() => {
+            handleClose();
+            setFormData({});
+          }}
           autoFocus
           color="info"
           variant="contained"
@@ -127,6 +186,20 @@ const AddContactDialog = ({
           {action === DEF_ACTIONS.EDIT ? "Update" : "Save"}
         </Button>
       </DialogActions>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 };
