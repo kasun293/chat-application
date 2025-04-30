@@ -10,17 +10,6 @@ public interface UserService {
 
     UserDTO registerUser(UserDTO userDto);
 
-//    ResponseEntity<UserDTO> loginUser(String username, String password) throws BadRequestException;
-//
-//    ResponseEntity<UserDTO> saveContact(Long id, List<UserDTO> contacts);
-//
-//    Boolean deleteContact(Long id);
-//
-//    ResponseEntity<List<UserDTO>> getAllContacts(Long id);
-
     UserDTO getLoggedInUser();
 
-    List<ContactDTO> getContactsByUserId(Long userId);
-
-    List<ConversationDTO> getConversationsByUserId(Long userId);
 }

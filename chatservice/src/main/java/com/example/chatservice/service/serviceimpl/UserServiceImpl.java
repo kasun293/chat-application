@@ -53,37 +53,6 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-//    @Override
-//    public ResponseEntity<UserDTO> loginUser(String username, String password) throws BadRequestException {
-//        User user = userRepository.findByUserNameAndPassword(username, password);
-//        if (user == null) {
-//            throw new BadRequestException("Invalid username or password");
-//        }
-//        UserDTO userDTO = MapperUtil.map(user, UserDTO.class);
-//        return ResponseEntity.ok(userDTO);
-//    }
-
-//    @Override
-//    public ResponseEntity<UserDTO> saveContact(Long id, List<UserDTO> contacts) {
-//        ModelMapper mapper = new ModelMapper();
-//        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found for id " + id));
-//        userRepository.save(user);
-//        return ResponseEntity.ok(UserDTO.builder()
-//                        .id(user.getId())
-//                        .userName(user.getUsername())
-//                .build());
-//    }
-
-//    @Override
-//    public Boolean deleteContact(Long id) {
-//        return null;
-//    }
-//
-//    @Override
-//    public ResponseEntity<List<UserDTO>> getAllContacts(Long id) {
-//        return null;
-//    }
-
     @Override
     public UserDTO getLoggedInUser() {
         User user = contextUtils.getLoggedInUserEntity();
@@ -98,13 +67,4 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    @Override
-    public List<ContactDTO> getContactsByUserId(Long userId) {
-        return contactService.getAllContactsByUserId(userId);
-    }
-
-    @Override
-    public List<ConversationDTO> getConversationsByUserId(Long userId) {
-        return conversationService.getAllConversationsByUserId(userId);
-    }
 }

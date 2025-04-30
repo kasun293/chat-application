@@ -64,15 +64,4 @@ public class UserController {
         return ServiceUtil.updateResponse(responseDTO);
     }
 
-    @GetMapping("/{id}/contacts")
-    public ResponseListDTO<?> getContacts(@PathVariable("id") Long id) {
-        ResponseListDTO<ContactDTO> responseListDTO = new ResponseListDTO<>();
-        responseListDTO.setPayloadDto(userService.getContactsByUserId(id));
-        return ServiceUtil.updateResponse(responseListDTO);
-    }
-
-    @GetMapping("/{id}/conversations")
-    public ResponseEntity<?> getConversations(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(userService.getConversationsByUserId(id));
-    }
 }
