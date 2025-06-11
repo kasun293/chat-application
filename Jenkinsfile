@@ -15,6 +15,7 @@ pipeline {
                 steps {
                     // Checkout code from your GitHub repository
                     git branch: 'service', url: 'https://github.com/your-org/your-repo.git'
+                    sh 'ls -a'
                 }
             }
 
