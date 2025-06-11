@@ -11,11 +11,17 @@ pipeline {
     }
 
     stages {
+            stage('Checkout Source Code') {
+                steps {
+                    // Checkout code from your GitHub repository
+                    git branch: 'service', url: 'https://github.com/your-org/your-repo.git'
+                }
+            }
 
         stage('Build Spring Boot Application Using Docker') {
             agent {
                 docker {
-                    image 'openjdk:23-jdk-alpine'
+                    image 'openjdk:23-jdk'
                     reuseNode true
                 }
             }
