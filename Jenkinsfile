@@ -29,7 +29,7 @@ pipeline {
             steps {
                 // Build the Spring Boot application using Maven
                 sh '''
-                    cd chatservice && ./mvnw clean install
+                    cd chatservice && chmod +x mvnw && ./mvnw clean install
                 '''
             }
         }
