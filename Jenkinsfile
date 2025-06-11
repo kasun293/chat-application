@@ -26,6 +26,9 @@ pipeline {
                     reuseNode true
                 }
             }
+            environment {
+                 HOME = '/tmp' // Or another writable directory inside the container
+            }
             steps {
                 // Build the Spring Boot application using Maven
                 sh '''
