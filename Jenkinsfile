@@ -30,13 +30,13 @@ pipeline {
                                sh 'mvn clean package -DskipTests'
                            }
                        }
-                       stage('Build Docker Image') {
-                                   steps {
-                                       script {
+               stage('Build Docker Image') {
+                            steps {
+                               script {
                                            docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
                                        }
                                    }
-                               }
+                            }
 //             agent {
 //                 docker {
 //                     image 'openjdk:23-jdk'
