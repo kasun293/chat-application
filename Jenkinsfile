@@ -17,6 +17,10 @@ pipeline {
 
     stages {
                stage('Build JAR') {
+               steps {
+                                              sh 'java --version'
+                                              sh 'mvn --version'
+                                          }
                            steps {
                                sh 'cd chatservice && mvn clean package -DskipTests'
                            }
