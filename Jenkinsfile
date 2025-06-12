@@ -1,10 +1,10 @@
 pipeline {
     agent any // Or specify a Docker agent if you have one set
-    tools {
-            jdk 'JDK23'          // Name defined in Global Tool Configuration
-            maven 'Maven3'       // Name defined in Global Tool Configuration
-            git 'DefaultGit'     // Optional, rarely needed unless special Git version
-        }
+//     tools {
+//             jdk 'JDK23'          // Name defined in Global Tool Configuration
+//             maven 'Maven3'       // Name defined in Global Tool Configuration
+//             git 'DefaultGit'     // Optional, rarely needed unless special Git version
+//         }
 
     environment {
         // Define environment variables, e.g., Docker registry URL, image name
@@ -16,15 +16,6 @@ pipeline {
     }
 
     stages {
-//             stage('Checkout Source Code') {
-//                 steps {
-//                     // Checkout code from your GitHub repository
-//                     git branch: 'service', url: 'https://github.com/your-org/your-repo.git'
-//                     sh 'ls -a'
-//                 }
-//             }
-
-        stage('Build Spring Boot Application Using Docker') {
                stage('Build JAR') {
                            steps {
                                sh 'mvn clean package -DskipTests'
@@ -37,22 +28,7 @@ pipeline {
                                        }
                                    }
                             }
-//             agent {
-//                 docker {
-//                     image 'openjdk:23-jdk'
-//                     reuseNode true
-//                 }
-//             }
-//             environment {
-//                  HOME = '/tmp' // Or another writable directory inside the container
-//             }
-//             steps {
-//                 // Build the Spring Boot application using Maven
-//                 sh '''
-//                     cd chatservice && chmod +x mvnw && ./mvnw clean install
-//                 '''
-//             }
-        }
+
 
     }
 
