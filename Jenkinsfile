@@ -19,13 +19,14 @@ pipeline {
                stage('Build JAR') {
                            steps {
                                script {
-                                   docker.image('maven:3.9.6-eclipse-temurin-21').inside {
+                                   docker.image('maven:3.9.6-eclipse-temurin-21').inside("-v $HOME/.m2:/root/.m2") {
                                        sh '''
                                            java --version
                                            cd chatservice
                                            mvn clean package -DskipTests
                                        '''
                                    }
+
                                }
                            }
                        }
