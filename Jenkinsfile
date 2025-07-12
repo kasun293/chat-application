@@ -1,44 +1,55 @@
 pipeline {
-    agent any // Or specify a Docker agent if you have one set
-//     tools {
-//             jdk 'JDK23'          // Name defined in Global Tool Configuration
-//             maven 'Maven3'       // Name defined in Global Tool Configuration
-//             git 'DefaultGit'     // Optional, rarely needed unless special Git version
-//         }
+    agent any
 
     environment {
-        // Define environment variables, e.g., Docker registry URL, image name
-        DOCKER_REGISTRY = "your-docker-registry.com" // e.g., Docker Hub or AWS ECR URL
-        IMAGE_NAME = "chat-service"
-        APP_PORT = "8080"
-        EC2_HOST = "ec2-user@3.95.185.11" // EC2 user and IP/DNS
-        EC2_KEY = credentials("ec2-ssh-key") // Jenkins credential ID for SSH key
+//         IMAGE_NAME = 'yourdockerhubusername/springboot-app'
+//         AWS_HOST = 'ec2-user@your-ec2-public-dns'
+        DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
+        DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
+        IMAGE_TAG = "latest"
     }
 
     stages {
-               stage('Build JAR') {
-                           steps {
-                               script {
-                                   docker.image('maven:3.9.6-eclipse-temurin-21').inside {
-                                       sh '''
-                                           mkdir -p /tmp/m2repo
-                                           cd chatservice
-                                           mvn clean package -DskipTests -Dmaven.repo.local=/tmp/m2repo
-                                       '''
-                                   }
+        stage('Checkout') {
+            steps {
+                git branch: 'service', url: 'https://github.com/kasun293/chat-application.git'
+            }
+        }
 
-                               }
-                           }
-                       }
-               stage('Build Docker Image') {
-                            steps {
-                               script {
-                                           docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                                       }
-                                   }
-                            }
+        stage('Build with Maven') {
+            steps {
+                sh 'cd chatservice && mvn clean package -DskipTests -e'
+            }
+        }
 
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    sh '''
+                                cd chatservice
+                                docker build -t devksn/chat-service:$IMAGE_TAG .
+                                echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+                                docker push devksn/chat-service:$IMAGE_TAG
+                       '''
+                }
+            }
+        }
 
+        // stage('Deploy to EC2') {
+        //     steps {
+        //         script {
+        //             def imageTag = "${IMAGE_NAME}:${env.BUILD_NUMBER}"
+        //             sh """
+        //                 ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${AWS_HOST} '
+        //                     docker pull ${imageTag}
+        //                     docker stop springboot-app || true
+        //                     docker rm springboot-app || true
+        //                     docker run -d --name springboot-app -p 8080:8080 ${imageTag}
+        //                 '
+        //             """
+        //         }
+        //     }
+        // }
     }
 
     post {
