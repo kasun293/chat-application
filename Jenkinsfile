@@ -46,7 +46,7 @@ pipeline {
                             docker pull $DOCKERHUB_REPO:$IMAGE_TAG
                             docker stop chat-service || true
                             docker rm chat-service || true
-                            docker run -d --name chat-service -p 8080:8080 $DOCKERHUB_REPO:$IMAGE_TAG
+                            docker run -d --name chat-service -p 8080:8080 $DOCKERHUB_REPO:$IMAGE_TAG --spring.profiles.active=prod
         EOF
                     """
                 }
