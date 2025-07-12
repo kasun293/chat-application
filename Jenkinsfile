@@ -2,11 +2,13 @@ pipeline {
     agent any
 
     environment {
-//         IMAGE_NAME = 'yourdockerhubusername/springboot-app'
-//         AWS_HOST = 'ec2-user@your-ec2-public-dns'
+        IMAGE_NAME = 'chat-service'
+        AWS_HOST = 'ubuntu@18.206.156.237'
         DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
         DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
         IMAGE_TAG = "latest"
+        DOCKERHUB_REPO = "devksn/chat-service"
+        SSH_KEY = credentials('AWS_DOCKER_SSH_KEY')
     }
 
     stages {
@@ -27,29 +29,29 @@ pipeline {
                 script {
                     sh '''
                                 cd chatservice
-                                docker build -t devksn/chat-service:$IMAGE_TAG .
+                                docker build -t $IMAGE_NAME:$IMAGE_TAG .
                                 echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-                                docker push devksn/chat-service:$IMAGE_TAG
+                                docker push $DOCKERHUB_REPO:$IMAGE_TAG
                        '''
                 }
             }
         }
 
-        // stage('Deploy to EC2') {
-        //     steps {
-        //         script {
-        //             def imageTag = "${IMAGE_NAME}:${env.BUILD_NUMBER}"
-        //             sh """
-        //                 ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${AWS_HOST} '
-        //                     docker pull ${imageTag}
-        //                     docker stop springboot-app || true
-        //                     docker rm springboot-app || true
-        //                     docker run -d --name springboot-app -p 8080:8080 ${imageTag}
-        //                 '
-        //             """
-        //         }
-        //     }
-        // }
+        stage('Deploy to EC2') {
+            steps {
+                script {
+                    sh '''
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no $AWS_HOST
+                            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+                            docker pull $DOCKERHUB_REPO:$IMAGE_TAG
+                            docker stop chat-service || true
+                            docker rm chat-service || true
+                            docker run -d --name chat-service -p 8080:8080 $$IMAGE_TAG
+
+                    '''
+                }
+            }
+        }
     }
 
     post {
