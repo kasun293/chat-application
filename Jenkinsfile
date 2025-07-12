@@ -42,16 +42,17 @@ pipeline {
                 script {
                     sh """
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no $AWS_HOST << EOF
-                            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+                            echo '$DOCKERHUB_PASSWORD' | docker login -u $DOCKERHUB_USERNAME --password-stdin
                             docker pull $DOCKERHUB_REPO:$IMAGE_TAG
                             docker stop chat-service || true
                             docker rm chat-service || true
                             docker run -d --name chat-service -p 8080:8080 $DOCKERHUB_REPO:$IMAGE_TAG
-                        EOF
+        EOF
                     """
                 }
             }
         }
+
     }
 
     post {
