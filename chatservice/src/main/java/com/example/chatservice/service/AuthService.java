@@ -1,8 +1,12 @@
 package com.example.chatservice.service;
 
+import com.example.chatservice.dto.AuthRefreshResponse;
 import com.example.chatservice.dto.AuthRequestDTO;
+import com.example.chatservice.dto.LoginResponse;
 
 public interface AuthService {
 
-    String login(AuthRequestDTO authRequestDTO);
+    LoginResponse login(AuthRequestDTO authRequestDTO);
+
+    AuthRefreshResponse userAuthRefresh(String refreshToken);
 }

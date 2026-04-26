@@ -29,7 +29,14 @@ public class ResponseListDTO<T> extends ResultsDTO {
         this.payloadDto = payloadDto;
     }
 
-    public static ResponseListDTO<?> generateResponse(ResponseListDTO<?> response) {
+//    public static ResponseListDTO<?> generateResponse(ResponseListDTO<?> response) {
+//        response.setResultStatus(ResultStatus.SUCCESSFUL);
+//        response.setHttpStatus(HttpStatus.OK);
+//        response.setHttpCode(response.getHttpStatus().toString());
+//        return response;
+//    }
+
+    public ResponseListDTO<T> updateResponse(ResponseListDTO<T> response) {
         response.setResultStatus(ResultStatus.SUCCESSFUL);
         response.setHttpStatus(HttpStatus.OK);
         response.setHttpCode(response.getHttpStatus().toString());

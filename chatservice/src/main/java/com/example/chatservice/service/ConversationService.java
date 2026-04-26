@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface ConversationService {
 
-    List<MessageDTO> getMessagesByConversationId(Long id);
+//    List<MessageDTO> getMessagesByConversationId(Long id);
 
     ConversationDTO createConversation(ConversationDTO conversationDTO);
+
+    ConversationDTO createPrivateChat(String contactNumber);
 
     ConversationDTO updateConversation(Long id, ConversationDTO conversationDTO);
 
@@ -18,4 +20,6 @@ public interface ConversationService {
     List<ConversationDTO> getAllConversationsByUserId(Long id);
 
     List<ConversationDTO> getAllConversations();
+
+    ConversationDTO getConversationById(Long id);
 }

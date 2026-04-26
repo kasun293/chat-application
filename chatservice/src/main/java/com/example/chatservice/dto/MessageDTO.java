@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +17,6 @@ public class MessageDTO {
     private String content;
     private Long senderId;
     private String senderName;
-    private Long timeStamp;
+    private Instant timeStamp;
     private Long conversationId;
 }

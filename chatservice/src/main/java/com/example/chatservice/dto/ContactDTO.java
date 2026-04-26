@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 public class ContactDTO {
 
     private Long id;
-    @NotBlank(message = "Name is required!")
-    private String name;
     private String displayName;
     @NotEmpty(message = "Phone number is required!")
     private String phone;

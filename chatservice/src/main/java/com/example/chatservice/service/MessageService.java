@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface MessageService {
 
+    void sendMessage(MessageDTO messageDTO);
+
     //save message
     MessageDTO saveMessage(MessageDTO messageDTO);
 
@@ -13,4 +15,5 @@ public interface MessageService {
 
     //get all messages by conversation
     List<MessageDTO> getAllMessagesByConversation(Long id);
+
 }

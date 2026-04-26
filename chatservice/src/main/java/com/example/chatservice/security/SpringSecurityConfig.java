@@ -46,10 +46,15 @@ public class SpringSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(
+                                "/actuator/**",
                                 "/api/v1/users/register",
                                 "/api/v1/users/login",
+                                "/api/v1/users/auth/refresh",
                                 "/api/v1/ws-endpoint/**",
-                                "/api/v1/users/greetings"
+                                "/api/v1/users/greetings",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
                         ).permitAll().anyRequest().authenticated()
 
                 )
@@ -68,7 +73,7 @@ public class SpringSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

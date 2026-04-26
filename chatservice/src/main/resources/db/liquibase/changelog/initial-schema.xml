@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/secure
+        http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+
+    <changeSet id="1774031555688-1" author="kasun">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+            </column>
+            <column name="gender" type="VARCHAR(255)"/>
+            <column name="user_name" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="display_name" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="conversation">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_conversation"/>
+            </column>
+            <column name="conversation_name" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="conversation_type" type="VARCHAR(255)"/>
+            <column name="created_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="conversation"
+                                 constraintName="FK_CONVERSATION_ON_CREATED_BY" referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+        <createTable tableName="contact">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_contact"/>
+            </column>
+            <column name="contact_user_id" type="BIGINT"/>
+            <column name="contact_name" type="VARCHAR(255)"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="contact_user_id" baseTableName="contact"
+                                 constraintName="FK_CONTACT_ON_CONTACT_USER" referencedColumnNames="id"
+                                 referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="contact" constraintName="FK_CONTACT_ON_USER"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+
+        <createTable tableName="conversation_user">
+            <column name="conversation_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_conversation_user"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_conversation_user"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="conversation_id" baseTableName="conversation_user"
+                                 constraintName="fk_conuse_on_conversation" referencedColumnNames="id"
+                                 referencedTableName="conversation"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="conversation_user"
+                                 constraintName="fk_conuse_on_user" referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+        <createTable tableName="message">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_message"/>
+            </column>
+            <column name="content" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sender_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sender_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_stamp" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="conversation_id" type="BIGINT"/>
+        </createTable>
+
+
+        <addForeignKeyConstraint baseColumnNames="conversation_id" baseTableName="message"
+                                 constraintName="FK_MESSAGE_ON_CONVERSATION" referencedColumnNames="id"
+                                 referencedTableName="conversation"/>
+
+    </changeSet>
+    
+    <changeSet id="1775570931710-1" author="kasun">
+        <loadData tableName="user"
+                  file="db/data/chat-user-data.csv"
+                  separator=";"
+                  encoding="UTF-8"
+        >
+        </loadData>
+    </changeSet>
+</databaseChangeLog>
