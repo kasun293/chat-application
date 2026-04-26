@@ -10,10 +10,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -77,10 +79,10 @@ public class UserController {
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
                 .httpOnly(true)
-                .secure(false)    // Set to TRUE in production (HTTPS), FALSE for localhost HTTP
-                .path("/")        // Using "/" ensures the cookie is sent to all endpoints
+                .secure(false)
+                .path("/")
                 .maxAge(7 * 24 * 60 * 60)
-                .sameSite("Lax")  // "Lax" is better for localhost cross-port requests
+                .sameSite("Lax")
                 .build();
 
         servletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -108,10 +110,10 @@ public class UserController {
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", authRefreshResponse.getRefreshToken())
                 .httpOnly(true)
-                .secure(false)    // Set to TRUE in production (HTTPS), FALSE for localhost HTTP
-                .path("/")        // Using "/" ensures the cookie is sent to all endpoints
+                .secure(false)
+                .path("/")
                 .maxAge(7 * 24 * 60 * 60)
-                .sameSite("Lax")  // "Lax" is better for localhost cross-port requests
+                .sameSite("Lax")
                 .build();
 
         servletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

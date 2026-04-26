@@ -14,9 +14,7 @@ import com.example.chatservice.service.ContactService;
 import com.example.chatservice.util.ContextUtils;
 import com.example.chatservice.util.MapperUtil;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,12 +36,13 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ContactDTO updateContact(Long id, ContactUpdateRequest request) {
-        if (!contactRepository.existsById(id)) {
+        Optional<Contact> contact = contactRepository.findById(id);
+        if (contact.isEmpty()) {
             throw new NotFoundException("Contact not found with id " + id);
         }
-        Contact contact = contactRepository.findById(id).get();
-        contact.setContactName(request.getDisplayName());
-        contactRepository.save(contact);
+        Contact existingContact = contact.get();
+        existingContact.setContactName(request.getDisplayName());
+        contactRepository.save(existingContact);
         return MapperUtil.map(request,ContactDTO.class);
     }
 

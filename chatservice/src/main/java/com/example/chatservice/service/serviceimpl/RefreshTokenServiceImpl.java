@@ -3,7 +3,6 @@ package com.example.chatservice.service.serviceimpl;
 import com.example.chatservice.entity.RefreshToken;
 import com.example.chatservice.repository.RefreshTokenRepository;
 import com.example.chatservice.service.RefreshTokenService;
-import com.example.chatservice.util.DateUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -49,7 +48,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public RefreshToken getValidRefreshToken(String refreshToken) {
         // find by token
         Optional<RefreshToken> existingToken = refreshTokenRepository.findByToken(refreshToken);
-        // if exist, validate not revoked and expired
+        // if existed, validate not revoked and expired
         if (existingToken.isEmpty() ||  existingToken.get().isRevoked() || existingToken.get().getExpiryDate().isBefore(Instant.now())) {
             throw new SecurityException("Invalid refresh token");
         }

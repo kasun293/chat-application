@@ -2,7 +2,6 @@ package com.example.chatservice.service.serviceimpl;
 
 import com.example.chatservice.dto.ContactDTO;
 import com.example.chatservice.dto.ConversationDTO;
-import com.example.chatservice.dto.MessageDTO;
 import com.example.chatservice.entity.Contact;
 import com.example.chatservice.entity.Conversation;
 import com.example.chatservice.entity.User;
@@ -11,41 +10,29 @@ import com.example.chatservice.exception.BadRequestException;
 import com.example.chatservice.exception.NotFoundException;
 import com.example.chatservice.repository.ContactRepository;
 import com.example.chatservice.repository.ConversationRepository;
-import com.example.chatservice.repository.UserRepository;
 import com.example.chatservice.service.ConversationService;
-import com.example.chatservice.service.MessageService;
 import com.example.chatservice.transformer.ConversationTransformer;
 import com.example.chatservice.util.ContextUtils;
 import com.example.chatservice.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class ConversationServiceImpl implements ConversationService {
-//    private final MessageService messageService;
     private final ContextUtils contextUtils;
     private final ConversationRepository conversationRepository;
     private final ContactRepository contactRepository;
-    private final UserRepository userRepository;
     private final ConversationTransformer conversationTransformer;
 
-    public ConversationServiceImpl(ContextUtils contextUtils, ConversationRepository conversationRepository, ContactRepository contactRepository, UserRepository userRepository, ConversationTransformer conversationTransformer) {
-//        this.messageService = messageService;
+    public ConversationServiceImpl(ContextUtils contextUtils, ConversationRepository conversationRepository, ContactRepository contactRepository, ConversationTransformer conversationTransformer) {
         this.contextUtils = contextUtils;
         this.conversationRepository = conversationRepository;
         this.contactRepository = contactRepository;
-        this.userRepository = userRepository;
         this.conversationTransformer = conversationTransformer;
     }
-
-//    @Override
-//    public List<MessageDTO> getMessagesByConversationId(Long id) {
-//        return messageService.getAllMessagesByConversation(id);
-//    }
 
     @Override
     public ConversationDTO createConversation(ConversationDTO conversationDTO) {
@@ -107,7 +94,6 @@ public class ConversationServiceImpl implements ConversationService {
     public List<ConversationDTO> getAllConversations() {
         User user = contextUtils.getLoggedInUserEntity();
         List<Conversation> conversationList = conversationRepository.findAllByUser(user.getId());
-        List<ConversationDTO> conversationDTOList = new ArrayList<>();
         return conversationTransformer.toDTOList(conversationList);
     }
 

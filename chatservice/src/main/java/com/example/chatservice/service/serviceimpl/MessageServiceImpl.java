@@ -1,10 +1,10 @@
 package com.example.chatservice.service.serviceimpl;
 
+import com.example.chatservice.dto.ContactDTO;
 import com.example.chatservice.dto.ConversationDTO;
 import com.example.chatservice.dto.MessageDTO;
 import com.example.chatservice.entity.Message;
 import com.example.chatservice.repository.MessageRepository;
-import com.example.chatservice.service.ContactService;
 import com.example.chatservice.service.ConversationService;
 import com.example.chatservice.service.MessageService;
 import com.example.chatservice.util.MapperUtil;
@@ -21,18 +21,20 @@ public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
     private final SimpMessageSendingOperations messagingTemplate;
     private final ConversationService conversationService;
-    private final ContactService contactService;
 
     @Override
     public void sendMessage(MessageDTO messageDTO) {
         ConversationDTO conversationDTO = conversationService.getConversationById(messageDTO.getConversationId());
         Long contactId = getContactId(messageDTO.getSenderId(), conversationDTO);
-//        Long userId = contactService.getUserOfContact(contactId);
         messagingTemplate.convertAndSend("/topic/" + contactId, messageDTO);
     }
 
     private Long getContactId(Long senderId, ConversationDTO conversationDTO) {
-        return conversationDTO.getContacts().stream().filter(contact -> !contact.getId().equals(senderId)).findFirst().get().getId();
+        return conversationDTO.getContacts().stream()
+                .map(ContactDTO::getId)
+                .filter(id -> !id.equals(senderId))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
