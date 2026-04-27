@@ -21,7 +21,7 @@ public class ConversationDTO {
     private String description;
     @Enumerated(EnumType.STRING)
     private ConversationType conversationType;
-    private Long createdDate;
+    private String createdDate;
     private Long createdBy;
     private List<ContactDTO> contacts;
     private String creatorName;

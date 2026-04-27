@@ -6,14 +6,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.List;
+import java.time.Instant;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class Conversation {
 
     @Id
@@ -24,22 +28,24 @@ public class Conversation {
 
     @Enumerated(EnumType.STRING)
     private ConversationType conversationType;
-    private Long createdDate;
-    private Long createdBy;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private Instant createdDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    private User createdBy;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "Conversation_Contact",
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Conversation_User",
             joinColumns = {
                     @JoinColumn(name = "conversation_id", referencedColumnName = "id")
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "contact_id", referencedColumnName = "id")
+                    @JoinColumn(name = "user_id", referencedColumnName = "id")
             }
     )
-    private List<Contact> contactList;
+    private Set<User> contactList;
 
 }

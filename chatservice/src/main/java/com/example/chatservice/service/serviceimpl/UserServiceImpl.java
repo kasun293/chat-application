@@ -1,18 +1,23 @@
 package com.example.chatservice.service.serviceimpl;
 
 import com.example.chatservice.dto.UserDTO;
+import com.example.chatservice.dto.UserRegistrationRequest;
+import com.example.chatservice.dto.UserResponse;
 import com.example.chatservice.entity.User;
 import com.example.chatservice.exception.BadRequestException;
+import com.example.chatservice.exception.UserAlreadyExistException;
 import com.example.chatservice.repository.UserRepository;
 import com.example.chatservice.service.ContactService;
 import com.example.chatservice.service.ConversationService;
 import com.example.chatservice.service.UserService;
 import com.example.chatservice.util.ContextUtils;
+import com.example.chatservice.util.MapperUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,6 +32,27 @@ public class UserServiceImpl implements UserService {
         this.contextUtils = contextUtils;
         this.contactService = contactService;
         this.conversationService = conversationService;
+    }
+
+    @Override
+    public UserResponse registerUser(UserRegistrationRequest request) {
+        Optional<User> user = getUserByMobileNumber(request.getUserName());
+        if (user.isPresent()) {
+            throw new UserAlreadyExistException("User with mobile number " + request.getUserName() + " already exists");
+        }
+        validatePassword(request);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        User userToSave = User.builder()
+                .userName(request.getUserName())
+                .password(encoder.encode(request.getPassword()))
+                .displayName(request.getDisplayName())
+                .build();
+        userRepository.save(userToSave);
+        return MapperUtil.map(userToSave, UserResponse.class);
+    }
+
+    private Optional<User> getUserByMobileNumber(String mobileNumber) {
+        return userRepository.findByUserName(mobileNumber);
     }
 
     @Override
@@ -45,21 +71,22 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .userName(user.getUsername())
                 .firstName(userDto.getFirstName())
-                .lastName(user.getLastName())
                 .build();
     }
 
+    private void validatePassword(UserRegistrationRequest request) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new BadRequestException("passwords mismatch");
+        }
+    }
+
     @Override
-    public UserDTO getLoggedInUser() {
+    public UserResponse getLoggedInUser() {
         User user = contextUtils.getLoggedInUserEntity();
 
-        return UserDTO.builder()
+        return UserResponse.builder()
                 .id(user.getId())
-                .userName(user.getUsername())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
                 .displayName(user.getDisplayName())
-                .gender(user.getGender())
                 .build();
     }
 

@@ -1,90 +1,58 @@
 pipeline {
-    agent any // Or specify a Docker agent if you have one set up
+    agent any
 
     environment {
-        // Define environment variables, e.g., Docker registry URL, image name
-        DOCKER_REGISTRY = "your-docker-registry.com" // e.g., Docker Hub or AWS ECR URL
-        IMAGE_NAME = "chat-service"
-        APP_PORT = "8080"
-        EC2_HOST = "ec2-user@your-app-ec2-ip-or-dns" // EC2 user and IP/DNS
-        EC2_KEY = "jenkins-ssh-key" // Jenkins credential ID for SSH key
+        IMAGE_NAME = 'chat-service'
+        AWS_HOST = 'ubuntu@18.206.156.237'
+        DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
+        DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
+        IMAGE_TAG = "latest"
+        DOCKERHUB_REPO = "devksn/chat-service"
+        SSH_KEY = credentials('AWS_DOCKER_SSH_KEY')
     }
 
     stages {
-        stage('Checkout Source Code') {
+        stage('Checkout') {
             steps {
-                // Checkout code from your GitHub repository
-                git branch: 'service', credentialsId: 'github-creds', url: 'https://github.com/your-org/your-repo.git'
+                git branch: 'service', url: 'https://github.com/kasun293/chat-application.git'
             }
         }
 
-        stage('Build Spring Boot Application') {
+        stage('Build with Maven') {
             steps {
-                // Assuming Maven or Gradle is used
-                // For Maven:
-                sh 'mvn clean install -DskipTests'
-                // For Gradle:
-                // sh './gradlew clean build -x test'
+                sh 'cd chatservice && mvn clean package -DskipTests -e'
             }
         }
 
-        stage('Run Unit Tests') {
-            steps {
-                // Execute unit tests
-                // For Maven:
-                sh 'mvn test'
-                // For Gradle:
-                // sh './gradlew test'
-            }
-        }
-
-        stage('Build Docker Image') {
+        stage('Docker Build & Push') {
             steps {
                 script {
-                    // Build the Docker image from the Dockerfile in the current directory
-                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                    sh '''
+                                cd chatservice
+                                docker build -t $IMAGE_NAME:$IMAGE_TAG .
+                                echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+                                docker push $DOCKERHUB_REPO:$IMAGE_TAG
+                       '''
                 }
             }
         }
 
-        stage('Push Docker Image to Registry') {
+        stage('Deploy to EC2') {
             steps {
                 script {
-                    // Push the built image to the configured Docker Registry
-                    // You might need to configure Docker credentials in Jenkins
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", 'docker-hub-creds') { // Or 'aws-ecr-creds'
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}").push()
-                        // Tag as 'latest' for easy pulling (optional, but common)
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:latest").push()
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to AWS EC2') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: "${EC2_KEY}", keyFileVariable: 'SSH_KEY')]) {
                     sh """
-                        # Connect to the remote EC2 instance via SSH
-                        ssh -i \$SSH_KEY -o StrictHostKeyChecking=no ${EC2_HOST} << EOF
-                            echo "Logged into EC2 instance..."
-                            # Pull the latest Docker image
-                            docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest
-
-                            # Stop and remove any old running container of this application
-                            if docker ps -a --format '{{.Names}}' | grep -q "${IMAGE_NAME}"; then
-                                docker stop ${IMAGE_NAME} && docker rm ${IMAGE_NAME}
-                            fi
-
-                            # Run the new Docker container, mapping ports
-                            docker run -d --name ${IMAGE_NAME} -p ${APP_PORT}:${APP_PORT} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest
-
-                            echo "Deployment complete."
-                        EOF
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no $AWS_HOST << EOF
+                            echo '$DOCKERHUB_PASSWORD' | docker login -u $DOCKERHUB_USERNAME --password-stdin
+                            docker pull $DOCKERHUB_REPO:$IMAGE_TAG
+                            docker stop chat-service || true
+                            docker rm chat-service || true
+                            docker run -d --name chat-service -p 8080:8080 $DOCKERHUB_REPO:$IMAGE_TAG --spring.profiles.active=prod
+        EOF
                     """
                 }
             }
         }
+
     }
 
     post {
