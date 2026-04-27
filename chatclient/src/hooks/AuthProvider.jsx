@@ -2,11 +2,13 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { AuthContext } from "./authContext";
+import { getLocalStorageItem } from "../storage/localStorage";
+import { StorageConstants } from "../constants/storage-constants";
 
 
-const AuthProvider = ({ children }) => {
+const AuthProvider = (props) => {
   // State to hold the authentication token
-  const [token, setToken_] = useState(localStorage.getItem("token"));
+  const [token, setToken_] = useState(getLocalStorageItem(StorageConstants.token) || null);
 
   // Function to set the authentication token
   const setToken = (newToken) => {
@@ -34,7 +36,7 @@ const AuthProvider = ({ children }) => {
 
   // Provide the authentication context to the children components
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextValue} {...props} />
   );
 };
 

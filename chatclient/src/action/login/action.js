@@ -1,7 +1,7 @@
 import axios from "axios";
 import { StorageConstants } from "../../constants/storage-constants";
-import { BASE_URL } from "../../api";
-import { get } from "../axios";
+import { defaultMessages } from "../../constants/apiMessages";
+import { get, post } from "../axios";
 // import { authAxios } from "../api/api";
 
 export const fetchUserList = async () => {
@@ -15,20 +15,6 @@ export const fetchUserList = async () => {
       };
       throw exception;
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const signUp = async (payload = {}) => {
-  try {
-    const response = await axios.post(BASE_URL + "users/register", payload, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "",
-      },
-    });
-    return response;
   } catch (error) {
     console.log(error);
   }
@@ -69,7 +55,7 @@ export const getMessageList = async () => {
 export const deleteConversation = async (
   formData,
   onSuccess = () => {},
-  onError = (_message) => {}
+  onError = (_message) => {},
 ) => {
   try {
     const response = await axios.delete("url");
@@ -104,7 +90,7 @@ export const deleteConversation = async (
 
 export const getUserProfile = async (
   onSuccess = () => {},
-  onError = (_message) => {}
+  onError = (_message) => {},
 ) => {
   try {
     const response = await get("users/logged-in-user", true);
@@ -124,7 +110,7 @@ export const getUserProfile = async (
 export const updateGroupConversation = async (
   payload = {},
   onSuccess = () => {},
-  onError = (_message) => {}
+  onError = (_message) => {},
 ) => {
   try {
     const response = axios.put("url");
@@ -173,21 +159,108 @@ export const createGroupConversation = async () => {
 //   }
 // }
 
-export const login = async (loginData) => {
+export const signUp = async (
+  signUpData,
+  onSuccess = () => {},
+  onError = (_message) => {},
+) => {
   try {
-    const response = await axios.post(BASE_URL + "users/login", loginData, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "",
-      },
-      // withCredentials: true,
-    });
-    if (response) {
-      console.log({ response });
-      localStorage.setItem(StorageConstants.token, response.data.accessToken);
+    const response = await post("users/register", signUpData);
+    console.log({ response });
+
+    if (response?.httpCode === "200 OK") {
+      onSuccess();
       return response;
+    } else {
+      const exception = {
+        error: {
+          data: {
+            apiError: {
+              message: response?.message || defaultMessages.apiErrorUnknown,
+            },
+          },
+        },
+      };
+      throw exception;
     }
-  } catch (error) {
-    console.log(error);
+  } catch ({ error }) {
+    if (typeof error === "object") {
+      const { data } = error;
+      const { apiError } = data;
+      onError(apiError?.message || defaultMessages.apiErrorUnknown);
+    } else {
+      onError(error);
+    }
+  }
+};
+
+export const login = async (
+  loginData,
+  onSuccess = () => {},
+  onError = (_message) => {},
+) => {
+  try {
+    const response = await post("users/login", loginData);
+
+    if (response?.httpCode === "200 OK") {
+      localStorage.setItem(
+        StorageConstants.token,
+        response.payload.accessToken,
+      );
+      onSuccess();
+      return response;
+    } else {
+      const exception = {
+        error: {
+          data: {
+            apiError: {
+              message: response?.message || defaultMessages.apiErrorUnknown,
+            },
+          },
+        },
+      };
+      throw exception;
+    }
+  } catch ({ error }) {
+    if (typeof error === "object") {
+      const { data } = error;
+      const { apiError } = data;
+      onError(apiError?.message || defaultMessages.apiErrorUnknown);
+    } else {
+      onError(error);
+    }
+  }
+};
+
+export const getLoggedInUser = async (
+  onSuccess = () => {},
+  onError = (_message) => {},
+) => {
+  try {
+    const response = await get("users/logged-in-user", true);
+
+    if (response?.httpCode === "200 OK") {
+      onSuccess();
+      return response;
+    } else {
+      const exception = {
+        error: {
+          data: {
+            apiError: {
+              message: response?.message || defaultMessages.apiErrorUnknown,
+            },
+          },
+        },
+      };
+      throw exception;
+    }
+  } catch ({ error }) {
+    if (typeof error === "object") {
+      const { data } = error;
+      const { apiError } = data;
+      onError(apiError?.message || defaultMessages.apiErrorUnknown);
+    } else {
+      onError(error);
+    }
   }
 };

@@ -1,6 +1,6 @@
-import axios from "axios";
 import { StorageConstants } from "../constants/storage-constants";
 import { BASE_URL } from "../api";
+import axiosApi from "./axios-interceotor";
 
 const get = async (urlPath, accessToken = false) => {
   let token = "";
@@ -19,7 +19,7 @@ const get = async (urlPath, accessToken = false) => {
   let url = BASE_URL + urlPath;
 
   return new Promise((resolve, reject) => {
-    axios
+    axiosApi
       .get(url, configHeaders)
       .then((response) => {
         if (response.status === 200 && response.data) {
@@ -61,7 +61,6 @@ const post = async (
   requestSecret = null,
   isMultiPart = false
 ) => {
-  console.log({ req });
 
   let token = "";
   if (accessToken) {
@@ -78,7 +77,7 @@ const post = async (
 
   let url = BASE_URL + urlPath;
   return new Promise((resolve, reject) => {
-    axios
+    axiosApi
       .post(url, req, configHeaders)
       .then((response) => {
         if (response.status === 200 && response.data) {
@@ -135,7 +134,7 @@ const put = async (
   let url = BASE_URL + urlPath;
 
   return new Promise((resolve, reject) => {
-    axios
+    axiosApi
       .put(url, req, configHeaders)
       .then((response) => {
         if (response.status === 200 && response.data) {
@@ -191,7 +190,7 @@ const api_delete = async (
   let url = BASE_URL + urlPath;
 
   return new Promise((resolve, reject) => {
-    axios
+    axiosApi
       .delete(url, configHeaders)
       .then((response) => {
         if (

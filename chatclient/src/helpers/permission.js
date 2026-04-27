@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { getLocalStorageItem } from "../storage/localStorage";
+import { StorageConstants } from "../constants/storage-constants";
 
 export const useUserAccessValidation = () => {
   const [initilizing, setInitializing] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const validateUserLoggedInState = async () => {
+  const validateUserLoggedInState = () => {
     try {
-      const isLoggedIn = await getUserLoggedState();
-  console.log({ isLoggedIn });
+      const isLoggedIn = getUserLoggedState();
 
-      if (!isLoggedIn && location.pathname === "/chat") {
+      if (!isLoggedIn && !["/", "/signup"].includes(location.pathname)) {
         navigate("/");
+      } else if (isLoggedIn && ["/", "/signup"].includes(location.pathname)) {
+        navigate("/chat-new");
       }
       setInitializing(false);
     } catch (error) {
@@ -27,15 +30,10 @@ export const useUserAccessValidation = () => {
 };
 
 export const getUserLoggedState = () => {
-  const token = getLsToken();
+  const token = getLocalStorageItem(StorageConstants.token);
 
   if (token === null || token === undefined) {
     return false;
   }
   return true;
-};
-
-export const getLsToken = () => {
-  const token = localStorage.getItem("token");
-  return token;
 };

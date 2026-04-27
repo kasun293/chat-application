@@ -1,44 +1,41 @@
-/* eslint-disable react/prop-types */
 import {
-  Alert,
   Box,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
-  Snackbar,
+  IconButton,
   TextField,
   colors,
 } from "@mui/material";
 import { FieldName } from "../../../components/FieldName";
 import { Fonts } from "../../../constants/Fonts";
 import { DEF_ACTIONS } from "../../../constants/permissions";
-// import { create } from "@mui/material/styles/createTransitions";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { createContact, updateContact } from "../../../action/contact/action";
+import CloseIcon from "@mui/icons-material/Close";
+import { useEffect, useState } from "react";
+import { defaultMessages } from "../../../constants/apiMessages";
+import { useSnackBars } from "../../../context/snackbars/useSnackBarHook";
+import PropTypes from "prop-types";
 
 const AddContactDialog = ({
   open,
   handleClose,
-  mode,
   action,
   setLoading,
   selectedContact,
 }) => {
+  console.log({ action });
   const [formData, setFormData] = useState({});
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success", // 'error' | 'info' | 'warning'
-  });
   useEffect(() => {
-    if (action === DEF_ACTIONS.EDIT) {
+    if (selectedContact && Object.keys(selectedContact).length > 0) {
       setFormData(selectedContact);
     }
-  }, [action, selectedContact]);
-  console.log({ selectedContact, action });
+  }, [selectedContact]);
+  const { addSnackBar } = useSnackBars();
+
   const handleChange = (value, key) => {
     setFormData((currentData = {}) => {
       let newData = { ...currentData };
@@ -46,30 +43,31 @@ const AddContactDialog = ({
       return newData;
     });
   };
+
   const onSuccess = () => {
-    setSnackbar({
-      open: true,
-      message: "Contact saved successfully!",
-      severity: "success",
+    addSnackBar({
+      type: "success",
+      message:
+        action === DEF_ACTIONS.EDIT
+          ? "Contact updated successfully!"
+          : "Contact added successfully!",
     });
+    setFormData({});
+    handleClose();
   };
 
   const onError = (message) => {
-    setSnackbar({
-      open: true,
-      message: message || "Something went wrong!",
-      severity: "error",
+    addSnackBar({
+      type: "error",
+      message: message || defaultMessages.apiErrorUnknown,
     });
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
-  const confirmAction = async (event, data, mode) => {
+  const confirmAction = async (event, data) => {
     event.preventDefault();
     try {
       setLoading(true);
-      if (formData?.id) {
+      if (action === DEF_ACTIONS.EDIT) {
         await updateContact(data, onSuccess, onError);
       } else {
         await createContact(data, onSuccess, onError);
@@ -86,8 +84,13 @@ const AddContactDialog = ({
       onClose={handleClose}
       aria-labelledby="add-contact"
       aria-describedby="add a new contact"
-      PaperProps={{ sx: { borderRadius: "15px", backgroundColor: "#ACE1AF" } }}
+      PaperProps={{ sx: { borderRadius: "15px", backgroundColor: "#ffffff" } }}
     >
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+        <IconButton onClick={handleClose}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
       <DialogTitle
         id="new-contact"
         style={{
@@ -106,8 +109,8 @@ const AddContactDialog = ({
               borderRadius: "5px",
             }}
           >
-            <Grid item sm={12} md={12} lg={12}>
-              <div>
+            <Grid container spacing={2}>
+              <Grid item sm={12} md={12} lg={12}>
                 <FieldName
                   style={{
                     width: "100%",
@@ -118,9 +121,11 @@ const AddContactDialog = ({
                 <TextField
                   name="name"
                   id="name"
-                  value={formData?.name || ""}
+                  value={formData?.displayName || ""}
                   disabled={action === DEF_ACTIONS.VIEW}
-                  onChange={(e) => handleChange(e?.target?.value || "", "name")}
+                  onChange={(e) =>
+                    handleChange(e?.target?.value || "", "displayName")
+                  }
                   size="small"
                   fullWidth
                   sx={{
@@ -130,8 +135,8 @@ const AddContactDialog = ({
                     },
                   }}
                 />
-              </div>
-              <div>
+              </Grid>
+              <Grid item sm={12} md={12} lg={12}>
                 <FieldName
                   style={{
                     width: "100%",
@@ -156,52 +161,38 @@ const AddContactDialog = ({
                     },
                   }}
                 />
-              </div>
+              </Grid>
+              <Grid item mt={3} sm={12} md={12} lg={12}>
+                <Button
+                  fullWidth
+                  disabled={action === DEF_ACTIONS.VIEW}
+                  onClick={(event) => confirmAction(event, formData)}
+                  // color="success"
+                  variant="contained"
+                  size="large"
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#5763FF",
+                    borderRadius: "7px",
+                  }}
+                >
+                  {action === DEF_ACTIONS.EDIT ? "Update" : "Save"}
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={() => {
-            handleClose();
-            setFormData({});
-          }}
-          autoFocus
-          color="info"
-          variant="contained"
-          size="small"
-          sx={{ marginLeft: "10px" }}
-        >
-          Cancel
-        </Button>
-        <Button
-          disabled={action === DEF_ACTIONS.VIEW}
-          onClick={(event) => confirmAction(event, formData, mode)}
-          color="success"
-          variant="contained"
-          size="small"
-          sx={{ marginLeft: "20px" }}
-        >
-          {action === DEF_ACTIONS.EDIT ? "Update" : "Save"}
-        </Button>
-      </DialogActions>
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Dialog>
   );
+};
+
+AddContactDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  action: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
+  setLoading: PropTypes.func.isRequired,
+  selectedContact: PropTypes.object,
 };
 
 export default AddContactDialog;

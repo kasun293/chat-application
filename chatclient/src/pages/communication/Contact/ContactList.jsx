@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getContactList } from "../../../action/contact/action";
 import SingleContact from "./SingleContact";
 
-const ContactList = ({ onClickEdit, onClickDelete }) => {
+const ContactList = ({ onClickEdit, onClickDelete, handleClickContact }) => {
   const [contacts, setContacts] = useState([]);
   useEffect(() => {
     // Fetch the list of contacts from the server
@@ -27,7 +27,9 @@ const ContactList = ({ onClickEdit, onClickDelete }) => {
             onClickEdit={onClickEdit}
             onClickDelete={onClickDelete}
             contact={contact}
-            handleConversation={() => {}}
+            handleConversation={() => {
+              handleClickContact(contact);
+            }}
             isSelected={false}
             key={contact.id}
           />

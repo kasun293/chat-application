@@ -1,5 +1,6 @@
 # Use the latest LTS version of Node.js
-FROM node:18
+# FROM node:18
+FROM node:20.20-alpine3.23
 
 # Set the working directory inside the container
 WORKDIR /chatclient
