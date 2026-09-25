@@ -26,13 +26,17 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ContactList from "../ContactList";
 // import { useUserAccessValidation } from "../../helpers/permission";
 import { useNavigate } from "react-router-dom";
-import { StorageConstants } from "../../constants/storage-constants";
+// import { StorageConstants } from "../../constants/storage-constants";
 import { Button } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useSnackBars } from "../../context/snackbars/useSnackBarHook";
-import { SnackBarTypes } from "../../components/SnackBar/SnackBarTypes";
-import { useAuth } from "../../hooks/useAuth";
-import { useUser } from "../../context/auth/useAuthHook";
+// import { useSnackBars } from "../../context/snackbars/useSnackBarHook";
+// import { SnackBarTypes } from "../../components/SnackBar/SnackBarTypes";
+import { useDispatch } from "react-redux";
+import { setLogout } from "../../redux/auth/authSlice";
+// import { useAuth } from "../../hooks/useAuth";
+// import { useUser } from "../../context/auth/useAuthHook";
+
+const user = null;
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -122,9 +126,10 @@ const MiniDrawer = () => {
   const [open, setOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const navigate = useNavigate();
-  const { addSnackBar } = useSnackBars();
-  const { setToken } = useAuth();
-  const { removeUser, user } = useUser();
+  // const { addSnackBar } = useSnackBars();
+  const dispatch = useDispatch();
+  // const { setToken } = useAuth();
+  // const { removeUser, user } = useUser();
 
   const handleMenueItemIndex = (index) => {
     setSelectedIndex(index);
@@ -138,32 +143,33 @@ const MiniDrawer = () => {
     setOpen(false);
   };
 
-  const onSuccess = () => {
-    removeUser();
-    navigate("/chat-new");
-    addSnackBar({
-      type: SnackBarTypes.success,
-      message: "Logout successful!",
-    });
-  };
+  // const onSuccess = () => {
+  //   removeUser();
+  //   navigate("/chat-new");
+  //   addSnackBar({
+  //     type: SnackBarTypes.success,
+  //     message: "Logout successful!",
+  //   });
+  // };
 
-  const onError = (message) => {
-    addSnackBar({
-      type: SnackBarTypes.error,
-      message: message || "Logout failed!",
-    });
-  };
+  // const onError = (message) => {
+  //   addSnackBar({
+  //     type: SnackBarTypes.error,
+  //     message: message || "Logout failed!",
+  //   });
+  // };
 
   const logOut = () => {
-    try {
-      localStorage.removeItem(StorageConstants.token);
-      setToken(null);
-      onSuccess();
+    dispatch(setLogout());
+    // try {
+    //   localStorage.removeItem(StorageConstants.token);
+    //   // setToken(null);
+    //   // onSuccess();
       navigate("/");
-    } catch (error) {
-      onError();
-      console.log(error);
-    }
+    // } catch (error) {
+    //   onError();
+    //   console.log(error);
+    // }
   };
 
   return (

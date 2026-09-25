@@ -2,15 +2,15 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import BasicLayout from "../BasicLayout";
 import Layout from "../Layout";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { signUp } from "../../action/login/action";
-import { SnackBarTypes } from "../../components/SnackBar/SnackBarTypes";
-import { useSnackBars } from "../../context/snackbars/useSnackBarHook";
+// import { useNavigate } from "react-router-dom";
+// import { signUp } from "../../action/login/action";
+// import { SnackBarTypes } from "../../components/SnackBar/SnackBarTypes";
+// import { useSnackBars } from "../../context/snackbars/useSnackBarHook";
 
 const SignUp2 = () => {
   const [formData, setFormData] = useState({});
-  const navigate = useNavigate();
-  const { addSnackBar } = useSnackBars();
+  // const navigate = useNavigate();
+  // const { addSnackBar } = useSnackBars();
 
   const handleChange = (value, target) => {
     setFormData((currentData = {}) => {
@@ -21,25 +21,25 @@ const SignUp2 = () => {
   };
   console.log(formData);
 
-    const onSuccess = () => {
-      navigate("/");
-      addSnackBar({
-        type: SnackBarTypes.success,
-        message: "Sign up successful!",
-      });
-    };
+    // const onSuccess = () => {
+    //   navigate("/");
+    //   addSnackBar({
+    //     type: SnackBarTypes.success,
+    //     message: "Sign up successful!",
+    //   });
+    // };
   
-    const onError = (message) => {
-      addSnackBar({
-        type: SnackBarTypes.error,
-        message: message || "Sign up failed!",
-      });
-    };
+    // const onError = (message) => {
+    //   addSnackBar({
+    //     type: SnackBarTypes.error,
+    //     message: message || "Sign up failed!",
+    //   });
+    // };
 
   const handleSignUp = async () => {
     console.log("sign up clicked");
     try {
-      await signUp(formData, onSuccess, onError);
+      // await signUp(formData, onSuccess, onError);
     } catch (error) {
       console.log(error);
     }

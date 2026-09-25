@@ -13,28 +13,33 @@ import { FieldName } from "../../../components/FieldName";
 import { Fonts } from "../../../constants/Fonts";
 import { DEF_ACTIONS } from "../../../constants/permissions";
 // import { useEffect, useState } from "react";
-import { createContact, updateContact } from "../../../action/contact/action";
+// import { createContact, updateContact } from "../../../action/contact/action";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
-import { defaultMessages } from "../../../constants/apiMessages";
-import { useSnackBars } from "../../../context/snackbars/useSnackBarHook";
+// import { defaultMessages } from "../../../constants/apiMessages";
+// import { useSnackBars } from "../../../context/snackbars/useSnackBarHook";
 import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { createContact, getContactList, updateContact } from "../../../redux/contact/action";
 
 const AddContactDialog = ({
   open,
   handleClose,
   action,
-  setLoading,
   selectedContact,
 }) => {
   console.log({ action });
   const [formData, setFormData] = useState({});
+  const dispatch = useDispatch();
+  const pagination = useSelector((state) => state.contact.pagination);
   useEffect(() => {
-    if (selectedContact && Object.keys(selectedContact).length > 0) {
+    if (action === DEF_ACTIONS.EDIT && selectedContact) {
       setFormData(selectedContact);
+    } else {
+      setFormData({});
     }
-  }, [selectedContact]);
-  const { addSnackBar } = useSnackBars();
+  }, [selectedContact, action]);
+  // const { addSnackBar } = useSnackBars();
 
   const handleChange = (value, key) => {
     setFormData((currentData = {}) => {
@@ -44,35 +49,44 @@ const AddContactDialog = ({
     });
   };
 
-  const onSuccess = () => {
-    addSnackBar({
-      type: "success",
-      message:
-        action === DEF_ACTIONS.EDIT
-          ? "Contact updated successfully!"
-          : "Contact added successfully!",
-    });
+  const closeDialog = () => {
     setFormData({});
     handleClose();
-  };
+  }
 
-  const onError = (message) => {
-    addSnackBar({
-      type: "error",
-      message: message || defaultMessages.apiErrorUnknown,
-    });
-  };
+  // const onSuccess = () => {
+  //   addSnackBar({
+  //     type: "success",
+  //     message:
+  //       action === DEF_ACTIONS.EDIT
+  //         ? "Contact updated successfully!"
+  //         : "Contact added successfully!",
+  //   });
+  //   setFormData({});
+  //   handleClose();
+  // };
+
+  // const onError = (message) => {
+  //   addSnackBar({
+  //     type: "error",
+  //     message: message || defaultMessages.apiErrorUnknown,
+  //   });
+  // };
 
   const confirmAction = async (event, data) => {
     event.preventDefault();
     try {
-      setLoading(true);
+      // setLoading(true);
       if (action === DEF_ACTIONS.EDIT) {
-        await updateContact(data, onSuccess, onError);
+        // await updateContact(data, onSuccess, onError);
+        dispatch(updateContact(data))
+        dispatch(getContactList(pagination));
       } else {
-        await createContact(data, onSuccess, onError);
+        // await createContact(data, onSuccess, onError);
+        dispatch(createContact(data))
+        dispatch(getContactList(pagination));
       }
-      setLoading(false);
+      // setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -81,13 +95,13 @@ const AddContactDialog = ({
     <Dialog
       className="add-contact-dialog"
       open={open}
-      onClose={handleClose}
+      onClose={closeDialog}
       aria-labelledby="add-contact"
       aria-describedby="add a new contact"
       PaperProps={{ sx: { borderRadius: "15px", backgroundColor: "#ffffff" } }}
     >
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
-        <IconButton onClick={handleClose}>
+        <IconButton onClick={closeDialog}>
           <CloseIcon />
         </IconButton>
       </Box>
@@ -191,7 +205,7 @@ AddContactDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   action: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
-  setLoading: PropTypes.func.isRequired,
+  // setLoading: PropTypes.func.isRequired,
   selectedContact: PropTypes.object,
 };
 

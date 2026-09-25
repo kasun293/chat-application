@@ -16,19 +16,24 @@ import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutl
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import { useEffect, useState } from "react";
-import { getContactList } from "../action/contact/action";
-const ContactTable = ({ handleRowEdit, handleRowDelete, loading }) => {
-  const [contacts, setContacts] = useState([]);
-  const [dataFetching, setDataFetching] = useState(false);
-  const sortBy = "id";
-  const sortOrder = "asc";
-
-  const [page, setPage] = useState(0);
+import { useDispatch, useSelector } from "react-redux";
+import { getContactList } from "../redux/contact/action";
+import { setPage } from "../redux/contact/contactSlice";
+// import { getContactList } from "../action/contact/action";
+const ContactTable = ({ handleRowEdit, handleRowDelete }) => {
+  const dispatch = useDispatch();
+  const contacts = useSelector((state) => state.contact.contacts);
+  console.log("111111111111111", contacts);
+  const page = useSelector((state) => state.contact.pagination.page);
+  const pagination = useSelector((state) => state.contact.pagination);
+  const loading = useSelector((state) => state.contact.loading);
+  // const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [totalElements, setTotalElements] = useState(0);
   const [rowsPerPageOptions, setRowsPerPageOptions] = useState([5, 10, 25]);
+  const totalElements = useSelector((state) => state.contact.totalElements);
 
   useEffect(() => {
+    dispatch(getContactList(pagination));
     const countRowsPerPage = () => {
       const options = [5, 10, 25];
       if (totalElements > 25) {
@@ -36,38 +41,39 @@ const ContactTable = ({ handleRowEdit, handleRowDelete, loading }) => {
       }
       setRowsPerPageOptions(options);
     }
-    const fetchContacts = async () => {
-      setDataFetching(true);
-      // mock fetch delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      try {
-        const response = await getContactList(
-          page,
-          rowsPerPage,
-          sortBy,
-          sortOrder,
-        );
-        const { response: { payloadDto = [] } = {} } = response || {};
-        const { response: { totalElements = 0 } = {} } = response || {};
-        setTotalElements(totalElements || 0);
-        setContacts(payloadDto || []);
-        countRowsPerPage();
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setDataFetching(false);
-      }
-    };
-    fetchContacts();
-  }, [loading, page, rowsPerPage]);
+    countRowsPerPage();
+    // const fetchContacts = async () => {
+    //   setDataFetching(true);
+    //   // mock fetch delay
+    //   await new Promise((resolve) => setTimeout(resolve, 1000));
+    //   try {
+    //     const response = await getContactList(
+    //       page,
+    //       rowsPerPage,
+    //       sortBy,
+    //       sortOrder,
+    //     );
+    //     const { response: { payloadDto = [] } = {} } = response || {};
+    //     const { response: { totalElements = 0 } = {} } = response || {};
+    //     setTotalElements(totalElements || 0);
+    //     setContacts(payloadDto || []);
+    //     countRowsPerPage();
+    //   } catch (error) {
+    //     console.log(error);
+    //   } finally {
+    //     setDataFetching(false);
+    //   }
+    // };
+    // fetchContacts();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    dispatch(setPage(newPage));
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    dispatch(setPage(0));
   };
 
   return (
@@ -82,7 +88,7 @@ const ContactTable = ({ handleRowEdit, handleRowDelete, loading }) => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ width: "100%" }}>
-            {dataFetching === false ? (
+            {loading === false ? (
               contacts.length > 0 &&
               contacts.map((row) => (
                 <TableRow
@@ -155,7 +161,7 @@ const ContactTable = ({ handleRowEdit, handleRowDelete, loading }) => {
 ContactTable.propTypes = {
   handleRowEdit: PropTypes.func.isRequired,
   handleRowDelete: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
+  // loading: PropTypes.bool.isRequired,
 };
 
 export default ContactTable;

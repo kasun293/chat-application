@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useUser } from "../auth/useAuthHook";
-import { useAuth } from "../../hooks/useAuth";
+// import { useUser } from "../auth/useAuthHook";
+// import { useAuth } from "../../hooks/useAuth";
 import { WebSocketContext } from "./webSocketContext";
 import SockJS from "sockjs-client";
 import { BASE_URL } from "../../api";
@@ -8,12 +8,13 @@ import { Client } from "@stomp/stompjs";
 
 const WebSocketProvider = (props) => {
     
-  const {user} = useUser();
+  // const {user} = useUser();
+  const user = null;
   const [client, setClient] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messageMap, setMessageMap] = useState(new Map());
   console.log("messageMap", messageMap);
-  const {token} = useAuth();
+  const token = "";
   
   useEffect(() => {
     if (!user?.id || !token) return;

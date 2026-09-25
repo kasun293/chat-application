@@ -1,7 +1,7 @@
 import axios from "axios";
-import { StorageConstants } from "../../constants/storage-constants";
-import { defaultMessages } from "../../constants/apiMessages";
-import { get, post } from "../axios";
+// import { StorageConstants } from "../../constants/storage-constants";
+// import { defaultMessages } from "../../constants/apiMessages";
+// import { get, post } from "../axios";
 // import { authAxios } from "../api/api";
 
 export const fetchUserList = async () => {
@@ -88,24 +88,7 @@ export const deleteConversation = async (
 //   }
 // };
 
-export const getUserProfile = async (
-  onSuccess = () => {},
-  onError = (_message) => {},
-) => {
-  try {
-    const response = await get("users/logged-in-user", true);
-    if (response?.httpCode === "200 OK") {
-      return response?.payload;
-    } else {
-      const exception = {
-        apiError: response.message,
-      };
-      throw exception;
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
+
 
 export const updateGroupConversation = async (
   payload = {},
@@ -159,108 +142,6 @@ export const createGroupConversation = async () => {
 //   }
 // }
 
-export const signUp = async (
-  signUpData,
-  onSuccess = () => {},
-  onError = (_message) => {},
-) => {
-  try {
-    const response = await post("users/register", signUpData);
-    console.log({ response });
 
-    if (response?.httpCode === "200 OK") {
-      onSuccess();
-      return response;
-    } else {
-      const exception = {
-        error: {
-          data: {
-            apiError: {
-              message: response?.message || defaultMessages.apiErrorUnknown,
-            },
-          },
-        },
-      };
-      throw exception;
-    }
-  } catch ({ error }) {
-    if (typeof error === "object") {
-      const { data } = error;
-      const { apiError } = data;
-      onError(apiError?.message || defaultMessages.apiErrorUnknown);
-    } else {
-      onError(error);
-    }
-  }
-};
 
-export const login = async (
-  loginData,
-  onSuccess = () => {},
-  onError = (_message) => {},
-) => {
-  try {
-    const response = await post("users/login", loginData);
 
-    if (response?.httpCode === "200 OK") {
-      localStorage.setItem(
-        StorageConstants.token,
-        response.payload.accessToken,
-      );
-      onSuccess();
-      return response;
-    } else {
-      const exception = {
-        error: {
-          data: {
-            apiError: {
-              message: response?.message || defaultMessages.apiErrorUnknown,
-            },
-          },
-        },
-      };
-      throw exception;
-    }
-  } catch ({ error }) {
-    if (typeof error === "object") {
-      const { data } = error;
-      const { apiError } = data;
-      onError(apiError?.message || defaultMessages.apiErrorUnknown);
-    } else {
-      onError(error);
-    }
-  }
-};
-
-export const getLoggedInUser = async (
-  onSuccess = () => {},
-  onError = (_message) => {},
-) => {
-  try {
-    const response = await get("users/logged-in-user", true);
-
-    if (response?.httpCode === "200 OK") {
-      onSuccess();
-      return response;
-    } else {
-      const exception = {
-        error: {
-          data: {
-            apiError: {
-              message: response?.message || defaultMessages.apiErrorUnknown,
-            },
-          },
-        },
-      };
-      throw exception;
-    }
-  } catch ({ error }) {
-    if (typeof error === "object") {
-      const { data } = error;
-      const { apiError } = data;
-      onError(apiError?.message || defaultMessages.apiErrorUnknown);
-    } else {
-      onError(error);
-    }
-  }
-};

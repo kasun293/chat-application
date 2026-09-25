@@ -4,21 +4,20 @@ import Layout from "../Layout";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BasicLayout from "../BasicLayout";
-import { login } from "../../action/login/action";
-import { SnackBarTypes } from "../../components/SnackBar/SnackBarTypes";
-import { useSnackBars } from "../../context/snackbars/useSnackBarHook";
-import { useAuth } from "../../hooks/useAuth";
-import { useUser } from "../../context/auth/useAuthHook";
+// import { SnackBarTypes } from "../../components/SnackBar/SnackBarTypes";
+// import { useSnackBars } from "../../context/snackbars/useSnackBarHook";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/auth/action";
+import { getLoggedInUser } from "../../redux/user/action";
 
 const Login2 = () => {
   const USER_NAME = "username";
   const PASSWORD = "password";
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
-  const { addSnackBar } = useSnackBars();
+  // const { addSnackBar } = useSnackBars();
   const navigate = useNavigate();
-  const { setToken } = useAuth();
-  const { getUser, removeUser } = useUser();
+  const dispatch = useDispatch();
 
   function validateMobileNumber(number) {
     const mobileNumberPattern = /^[0-9]{10}$/; // Example pattern for a 10-digit number
@@ -73,33 +72,36 @@ const Login2 = () => {
     });
   };
 
-  const onSuccess = () => {
-    addSnackBar({
-      type: SnackBarTypes.success,
-      message: "Login successful!",
-    });
-  };
+  // const onSuccess = () => {
+  //   addSnackBar({
+  //     type: SnackBarTypes.success,
+  //     message: "Login successful!",
+  //   });
+  // };
 
-  const onError = (message) => {
-    removeUser();
-    addSnackBar({
-      type: SnackBarTypes.error,
-      message: message || "Login failed!",
-    });
-  };
+  // const onError = (message) => {
+  //   removeUser();
+  //   addSnackBar({
+  //     type: SnackBarTypes.error,
+  //     message: message || "Login failed!",
+  //   });
+  // };
 
   const handleLogin = async () => {
     try {
-      const response = await login(formData, onSuccess, onError);
-      if (response?.payload?.accessToken) {
-        setToken(response.payload.accessToken);
-        getUser();
+        // 1. Wait for the login API call to complete successfully
+        await dispatch(login(formData)).unwrap();
+        
+        // 2. Once logged in, fetch the user data
+        await dispatch(getLoggedInUser()).unwrap();
+        
+        // 3. Finally, navigate to the chats page
         navigate("/chats");
-      }
     } catch (error) {
-      console.log(error);
+        // This will now catch any errors thrown by either login or getLoggedInUser
+        console.log("Login failed:", error);
     }
-  };
+};
 
   return (
     <Layout>
