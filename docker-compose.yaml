@@ -1,0 +1,64 @@
+
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: chat
+      MYSQL_ROOT_PASSWORD: 1234
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+    networks:
+      - chat-app-network
+
+  backend:
+    build:
+      context: ./chatservice
+      dockerfile: Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/chat
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_PROFILES_ACTIVE: local
+    networks:
+      - chat-app-network
+
+  frontend:
+    build:
+      context: ./chatclient
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    command: npm run dev -- --host
+    networks:
+      - chat-app-network
+    depends_on:
+      backend:
+        condition: service_healthy
+
+networks:
+  chat-app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
