@@ -16,36 +16,42 @@ import {
 } from "@mui/material";
 import NewSingleChat from "./NewSingleChat";
 import NewGroupChat from "./NewGroupChat";
-import { getAllContactList } from "../../../action/contact/action";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllContactList } from "../../../redux/contact/action";
+// import { getAllContactList } from "../../../action/contact/action";
 
 const NewChat = () => {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.contact.loading);
+  const contactList = useSelector((state) => state.contact.contacts);
+  const [sortedContactList, setSortedContactList] = useState(contactList);
 
   useEffect(() => {
-    const fetchContacts = async () => {
-      setLoading(true);
-      // mock fetch delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // Fetch contacts logic here
-      try {
-        const response = await getAllContactList();
-        setContactList(response?.dataList || []);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchContacts();
+    dispatch(getAllContactList());
+    // const fetchContacts = async () => {
+    //   setLoading(true);
+    //   // mock fetch delay
+    //   await new Promise((resolve) => setTimeout(resolve, 1000));
+    //   // Fetch contacts logic here
+    //   try {
+    //     const response = await getAllContactList();
+    //     setContactList(response?.dataList || []);
+    //   } catch (error) {
+    //     console.log(error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+    // fetchContacts();
   }, []);
 
-  const [contactList, setContactList] = React.useState([]);
+  // const [contactList, setContactList] = React.useState([]);
   const [activeTab, setActiveTab] = React.useState(0);
 
   const handleChange = (value) => {
     const searchTerm = value.toLowerCase();
 
-    setContactList(() => {
+    setSortedContactList(() => {
       // 1. Create a shallow copy to avoid mutating the original 'contactList'
       const sortedContacts = [...contactList].sort((a, b) => {
         const nameA = a.displayName.toLowerCase();
@@ -168,7 +174,7 @@ const NewChat = () => {
         {activeTab === 0 && (
           <>
             {loading === false ? (
-              <NewSingleChat contactList={contactList} />
+              <NewSingleChat contactList={sortedContactList} />
             ) : (
               <Box
                 p={2}
@@ -185,7 +191,7 @@ const NewChat = () => {
         {activeTab === 1 && (
           <>
             {loading === false ? (
-              <NewGroupChat contactList={contactList} />
+              <NewGroupChat contactList={sortedContactList} />
             ) : (
               <Box
                 p={2}

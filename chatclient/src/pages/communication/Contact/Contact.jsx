@@ -4,28 +4,35 @@ import ContactList from "./ContactList";
 import { Alert, Box, Button, Snackbar } from "@mui/material";
 import { DEF_ACTIONS } from "../../../constants/permissions";
 import DeleteDialog from "../../../components/DeleteDialog/DeleteDialog";
-import { deleteContact } from "../../../action/contact/action";
+// import { deleteContact } from "../../../action/contact/action";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteContact } from "../../../redux/contact/action";
 // import { DEF_ACTIONS } from "../../../constants/permissions";
 
 const Contact = () => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [action, setAction] = useState(DEF_ACTIONS.ADD);
   // const [action, setAction] = useState(DEF_ACTIONS.ADD);
   const [selectedContact, setSelectedContact] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.contact.loading);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success", // 'error' | 'info' | 'warning'
   });
   const handleClickOpen = () => {
+    setSelectedContact(null);
     setAction(DEF_ACTIONS.ADD);
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    setSelectedContact(null);
   };
+
   const handleEdit = (contact) => {
     setSelectedContact(contact);
     setAction(DEF_ACTIONS.EDIT);
@@ -36,37 +43,39 @@ const Contact = () => {
     setSelectedContact(contact);
     setDeleteDialogOpen(true);
   };
+
   const handleDeleteConfirm = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       // Call the delete API here using the selectedContact ID
-      await deleteContact(selectedContact.id, onSuccess, onError); // Assuming you have a deleteContact function in your action file
-      setLoading(false);
+      await dispatch(deleteContact(selectedContact.id)).unwrap();
+      // setLoading(false);
       setDeleteDialogOpen(false);
     } catch (error) {
       console.log(error);
     }
   };
   const handleDeleteCancel = () => {
+    setSelectedContact(null);
     setDeleteDialogOpen(false);
     setSelectedContact(null);
   };
 
-  const onSuccess = () => {
-    setSnackbar({
-      open: true,
-      message: "Contact Deleted successfully!",
-      severity: "success",
-    });
-  };
+  // const onSuccess = () => {
+  //   setSnackbar({
+  //     open: true,
+  //     message: "Contact Deleted successfully!",
+  //     severity: "success",
+  //   });
+  // };
 
-  const onError = (message) => {
-    setSnackbar({
-      open: true,
-      message: message || "Something went wrong!",
-      severity: "error",
-    });
-  };
+  // const onError = (message) => {
+  //   setSnackbar({
+  //     open: true,
+  //     message: message || "Something went wrong!",
+  //     severity: "error",
+  //   });
+  // };
   const handleSnackbarClose = () => {
     setSnackbar((prev) => ({ ...prev, open: false }));
   };
@@ -89,7 +98,7 @@ const Contact = () => {
         <ContactList onClickEdit={handleEdit} onClickDelete={handleDelete} />
       )}
       <AddContactDialog
-        setLoading={setLoading}
+        // setLoading={setLoading}
         action={action}
         handleClose={handleClose}
         open={open}

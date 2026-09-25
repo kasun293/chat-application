@@ -5,17 +5,19 @@ import ChatPage2 from "./components/ChatPage2";
 // import { MessageData } from "./conversation-data";
 import NewChatToolTip from "./newChatTooltip/NewChatToolTip";
 import { getConversationList } from "../../action/conversation/action";
-import { useUser } from "../../context/auth/useAuthHook";
+// import { useUser } from "../../context/auth/useAuthHook";
 import { useWebSocket } from "../../context/webSocket/useWebSocketHook";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Chat2 = () => {
   const [conversationList, setConversationList] = useState([]);
   const [conversation, setConversation] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { user } = useUser();
+  // const { user } = useUser();
   const { client, messages } = useWebSocket();
   const location = useLocation();
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchConversations = async () => {

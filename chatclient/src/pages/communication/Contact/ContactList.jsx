@@ -1,22 +1,27 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
-import { getContactList } from "../../../action/contact/action";
+import { useEffect } from "react";
+// import { getContactList } from "../../../action/contact/action";
 import SingleContact from "./SingleContact";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllContactList } from "../../../redux/contact/action";
 
 const ContactList = ({ onClickEdit, onClickDelete, handleClickContact }) => {
-  const [contacts, setContacts] = useState([]);
+  // const [contacts, setContacts] = useState([]);
+  const dispatch = useDispatch();
+  const contacts = useSelector((state) => state.contact.contacts);
   useEffect(() => {
+    dispatch(getAllContactList());
     // Fetch the list of contacts from the server
-    fetchContacts();
+    // fetchContacts();
 
-    async function fetchContacts() {
-      try {
-        const response = await getContactList();
-        setContacts(response.dataList);
-      } catch (error) {
-        console.error("Error fetching contacts:", error);
-      }
-    }
+    // async function fetchContacts() {
+    //   try {
+    //     const response = await getContactList();
+    //     // setContacts(response.dataList);
+    //   } catch (error) {
+    //     console.error("Error fetching contacts:", error);
+    //   }
+    // }
   }, []);
 
   return (

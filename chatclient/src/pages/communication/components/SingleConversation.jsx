@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 import { Avatar, Box, Grid, styled, Typography } from "@mui/material";
-import { useUser } from "../../../context/auth/useAuthHook";
+import { useSelector } from "react-redux";
 
 const SingleConversation = ({
   conversation,
   handleConversation,
   isSelected,
 }) => {
-  const {user} = useUser();
+  const userId = useSelector((state) => state.user.id);
   // const getDateTime = (unix) => {
   //   if (!unix) return "";
   //   const timestamp = unix * 1000;
@@ -37,7 +37,7 @@ const SingleConversation = ({
     if (conversation?.conversationType === "GROUP") {
       return conversation?.conversationName;
     } else {
-      const contact = conversation?.contacts.filter((contact) => contact.id !== user.id)[0];
+      const contact = conversation?.contacts.filter((contact) => contact.id !== userId)[0];
       return contact?.displayName || "Unknown User";
     }
   };

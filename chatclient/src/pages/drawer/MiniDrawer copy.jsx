@@ -24,15 +24,18 @@ import AddIcCallOutlinedIcon from "@mui/icons-material/AddIcCallOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 // import { useUserAccessValidation } from "../../helpers/permission";
 import { useNavigate } from "react-router-dom";
-import { StorageConstants } from "../../constants/storage-constants";
+// import { StorageConstants } from "../../constants/storage-constants";
 import { Button } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useSnackBars } from "../../context/snackbars/useSnackBarHook";
-import { SnackBarTypes } from "../../components/SnackBar/SnackBarTypes";
-import { useAuth } from "../../hooks/useAuth";
-import { useUser } from "../../context/auth/useAuthHook";
+// import { useSnackBars } from "../../context/snackbars/useSnackBarHook";
+// import { SnackBarTypes } from "../../components/SnackBar/SnackBarTypes";
+// import { useAuth } from "../../hooks/useAuth";
+// import { useUser } from "../../context/auth/useAuthHook";
 import Main from "../Main";
 import { routes } from "../../routes/routes";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogout } from "../../redux/auth/authSlice";
+import { clearUser } from "../../redux/user/userSlice";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -122,19 +125,23 @@ const MiniDrawer = () => {
   const [open, setOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const navigate = useNavigate();
-  const { addSnackBar } = useSnackBars();
-  const { token, setToken } = useAuth();
-  const { user, getUser, removeUser} = useUser();
-    console.log({token})
-    console.log({getUser})
+  // const { addSnackBar } = useSnackBars();
+  const dispatch = useDispatch();
+  // const token = null;
+  const user = null;
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const { token, setToken } = useAuth();
+  // const { user, getUser, removeUser} = useUser();
+    // console.log({token})
+    // console.log({getUser})
 
   React.useEffect(() => {
-    if (token === null) {
+    if (!isAuthenticated) {
       navigate("/login");
     } else {
       navigate("/chats");
     }
-  }, [token, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const handleMenueItemIndex = (index) => {
     setSelectedIndex(index);
@@ -148,32 +155,34 @@ const MiniDrawer = () => {
     setOpen(false);
   };
 
-  const onSuccess = () => {
-    removeUser();
-    navigate("/chat-new");
-    addSnackBar({
-      type: SnackBarTypes.success,
-      message: "Logout successful!",
-    });
-  };
+  // const onSuccess = () => {
+  //   removeUser();
+  //   navigate("/chat-new");
+  //   addSnackBar({
+  //     type: SnackBarTypes.success,
+  //     message: "Logout successful!",
+  //   });
+  // };
 
-  const onError = (message) => {
-    addSnackBar({
-      type: SnackBarTypes.error,
-      message: message || "Logout failed!",
-    });
-  };
+  // const onError = (message) => {
+  //   addSnackBar({
+  //     type: SnackBarTypes.error,
+  //     message: message || "Logout failed!",
+  //   });
+  // };
 
   const logOut = () => {
-    try {
-      localStorage.removeItem(StorageConstants.token);
-      setToken(null);
-      onSuccess();
-      navigate("/login");
-    } catch (error) {
-      onError();
-      console.log(error);
-    }
+    // try {
+    //   localStorage.removeItem(StorageConstants.token);
+      // setToken(null);
+      // onSuccess();
+      dispatch(setLogout());
+      dispatch(clearUser());
+      navigate("/");
+    // } catch (error) {
+    //   onError();
+    //   console.log(error);
+    // }
   };
 
   return (

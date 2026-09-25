@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { UserContext } from "./userContext";
-import { getLoggedInUser } from "../../action/login/action";
+// import { getLoggedInUser } from "../../action/login/action";
 
 export const UserProvider = (props) => {
   const [user, setUser] = useState(null);
@@ -15,8 +15,8 @@ export const UserProvider = (props) => {
 
   const fetchUserData = async () => {
     try {
-      const response = await getLoggedInUser();
-      setUser(response?.payload);
+      // const response = await getLoggedInUser();
+      // setUser(response?.payload);
       if (window.location.pathname === "/login") {
         window.location.href = "/chats";
       }
